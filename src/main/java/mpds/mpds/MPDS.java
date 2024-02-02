@@ -33,7 +33,12 @@ public class MPDS implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("MPDS loaded");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        LOGGER.info("MPDS loaded");
 		ModConfigs.registerConfigs();
 
         try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME , USER, PASSWD)){
