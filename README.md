@@ -9,3 +9,11 @@ it's a fabric mod to sync player data between fabric servers. this needs only se
 1. restart server.
 1. edit config file which is in config/mpdsconfig file.
 1. let's play!
+## config file
+```
+HOST=000.000.000.000 #String | default: 000.000.000.000 | comment: it's mysql host ip
+DB_NAME=test #String | default: test | comment: it's mysql database name **YOU MUST CREATE THIS DB!!**
+TABLE_NAME=test #String | default: test | comment: it's mysql table name(auto create)
+USER=test #String | default: test | comment: it's mysql user name
+PASSWD=test #String | default: test | comment: it's mysql user's password
+```
