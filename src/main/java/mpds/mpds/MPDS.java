@@ -39,7 +39,7 @@ public class MPDS implements ModInitializer {
             throw new RuntimeException(e);
         }
         LOGGER.info("MPDS loaded");
-		ModConfigs.registerConfigs();
+		registerConfigs();
 
         try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME , USER, PASSWD)){
 			connection.prepareStatement
@@ -145,7 +145,13 @@ public class MPDS implements ModInitializer {
 			statement.setInt(5, player.getHungerManager().getFoodLevel());
 			statement.setFloat(6, player.getHungerManager().getSaturationLevel());
 			statement.setInt(7, ((HungerManagerAccessor) player.getHungerManager()).getFoodTickTimer());
-			statement.setString(9, ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString());
+			StringBuilder off = new StringBuilder();
+			if (player.getInventory().offHand.get(0).isEmpty()){
+				off.append("{\"id\":\"minecraft:air\",\"Count\":0}");
+			}else {
+				off.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow());
+			}
+			statement.setString(9, off.toString());
 			statement.setInt(11, player.getInventory().selectedSlot);
 			statement.setInt(12, player.experienceLevel);
 			statement.setFloat(13, player.experienceProgress);
@@ -153,19 +159,31 @@ public class MPDS implements ModInitializer {
 			EnderChestInventory end = player.getEnderChestInventory();
 			StringBuilder endresults = new StringBuilder();
 			for (int i=0;i<end.size();i++){
-				endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+				if (end.getStack(i).isEmpty()){
+					endresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
+				}else {
+					endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+				}
 			}
 			statement.setString(3, endresults.toString());
 			DefaultedList<ItemStack> main = player.getInventory().main;
 			StringBuilder mainresults = new StringBuilder();
 			for (int i=0;i<main.size();i++){
-				mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+				if (main.get(i).isEmpty()){
+					endresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
+				}else {
+					mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+				}
 			}
 			statement.setString(8, mainresults.toString());
 			DefaultedList<ItemStack> armor = player.getInventory().armor;
 			StringBuilder armorresults = new StringBuilder();
 			for (int i=0;i<armor.size();i++){
-				armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+				if (armor.get(i).isEmpty()){
+					armorresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
+				}else {
+					armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+				}
 			}
 			statement.setString(10, armorresults.toString());
 			StringBuilder effresults = new StringBuilder();
