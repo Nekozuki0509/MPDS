@@ -17,3 +17,5 @@ TABLE_NAME=test #String | default: test | comment: it's mysql table name(auto cr
 USER=test #String | default: test | comment: it's mysql user name
 PASSWD=test #String | default: test | comment: it's mysql user's password
 ```
+##Release
+https://modrinth.com/mod/mpds/version/9i2rVlAq
