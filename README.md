@@ -18,4 +18,4 @@ USER=test #String | default: test | comment: it's mysql user name
 PASSWD=test #String | default: test | comment: it's mysql user's password
 ```
 ## Released on modrinth
-https://modrinth.com/mod/mpds/version/9i2rVlAq
+https://modrinth.com/mod/mpds/
