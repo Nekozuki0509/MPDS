@@ -170,7 +170,7 @@ public class MPDS implements ModInitializer {
 			StringBuilder mainresults = new StringBuilder();
 			for (int i=0;i<main.size();i++){
 				if (main.get(i).isEmpty()){
-					endresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
+					mainresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
 				}else {
 					mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
 				}
