@@ -114,21 +114,21 @@ public class MPDS implements ModInitializer {
 				if (!Objects.equals(effdata = resultSet.getString("effect"), "")) {
 					List.of(effdata.split("&")).forEach(effcompound -> serverPlayNetworkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), StatusEffectInstance.fromNbt( NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(effcompound)).resultOrPartial(LOGGER::error).orElseThrow()))));
 				}
-				player.sendMessage(new TranslatableText("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA), true);
+				player.sendMessage(new TranslatableText("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA), false);
 				LOGGER.info("success to load " + player.getName().getString() + "'s data!");
 			}else {
 				PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + TABLE_NAME + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
 				addplayer.setString(1, player.getName().getString());
 				addplayer.setString(2, player.getUuid().toString());
 				addplayer.executeUpdate();
-				player.sendMessage(new TranslatableText("CANNOT FIND " + player.getName().getString() + "'s DATA!").formatted(Formatting.RED), true);
-				player.sendMessage(new TranslatableText("MAKE NEW ONE!").formatted(Formatting.RED), true);
+				player.sendMessage(new TranslatableText("CANNOT FIND " + player.getName().getString() + "'s DATA!").formatted(Formatting.RED), false);
+				player.sendMessage(new TranslatableText("MAKE NEW ONE!").formatted(Formatting.RED), false);
 				LOGGER.warn("CANNOT FIND " + player.getName().getString() + "'s DATA!");
 				LOGGER.warn("MAKE NEW ONE!");
 			}
 
 		} catch (SQLException | InterruptedException e) {
-			player.sendMessage(new TranslatableText("THERE WERE SOME ERROR WHEN LOAD PLAYER DATA").formatted(Formatting.RED), true);
+			player.sendMessage(new TranslatableText("THERE WERE SOME ERROR WHEN LOAD PLAYER DATA").formatted(Formatting.RED), false);
 			LOGGER.error("THERE WERE SOME ERROR WHEN LOAD PLAYER DATA:");
 			e.printStackTrace();
 		}
@@ -169,9 +169,12 @@ public class MPDS implements ModInitializer {
 			DefaultedList<ItemStack> main = player.getInventory().main;
 			StringBuilder mainresults = new StringBuilder();
 			for (int i=0;i<main.size();i++){
+				LOGGER.info(String.valueOf(i));
 				if (main.get(i).isEmpty()){
-					endresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
+					LOGGER.info("empty");
+					mainresults.append("{\"id\":\"minecraft:air\",\"Count\":0}~").append(i).append("&");
 				}else {
+					LOGGER.info(main.get(i).toString());
 					mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
 				}
 			}
