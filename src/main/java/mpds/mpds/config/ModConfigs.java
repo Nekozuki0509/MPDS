@@ -13,6 +13,8 @@ public class ModConfigs {
     public static String USER;
     public static String PASSWD;
 
+    public static String SERVER;
+
     public static void registerConfigs() {
         configs = new ModConfigProvider();
         createConfigs();
@@ -28,6 +30,7 @@ public class ModConfigs {
         configs.addKeyValuePair(new Pair<>("TABLE_NAME", "test"), "String", "it's mysql table name(auto create)");
         configs.addKeyValuePair(new Pair<>("USER", "test"), "String", "it's mysql user name");
         configs.addKeyValuePair(new Pair<>("PASSWD", "test"), "String", "it's mysql user's password");
+        configs.addKeyValuePair(new Pair<>("SERVER", "s"), "String", "it's this server name");
     }
 
     private static void assignConfigs() {
@@ -36,6 +39,7 @@ public class ModConfigs {
         TABLE_NAME = CONFIG.getOrDefault("TABLE_NAME", "test");
         USER = CONFIG.getOrDefault("USER", "test");
         PASSWD = CONFIG.getOrDefault("PASSWD", "test");
+        SERVER = CONFIG.getOrDefault("SERVER", "s");
 
         System.out.println("All " + configs.getConfigsList().size() + " have been set properly");
     }
