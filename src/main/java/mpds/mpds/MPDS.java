@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +32,11 @@ import static mpds.mpds.config.ModConfigs.*;
 public class MPDS implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("mpds");
 
+	public static Connection connection = null;
+
+	static final List<String> broken = new ArrayList<>();
+
+
 	@Override
 	public void onInitialize() {
         try {
@@ -38,10 +44,16 @@ public class MPDS implements ModInitializer {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        LOGGER.info("MPDS loaded");
+
 		ModConfigs.registerConfigs();
 
-        try(Connection connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME , USER, PASSWD)){
+		try {
+			connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME , USER, PASSWD);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+        try {
 			connection.prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +"(" +
 							"id int auto_increment PRIMARY KEY," +
@@ -61,13 +73,17 @@ public class MPDS implements ModInitializer {
 							"experienceLevel int," +
 							"experienceProgress int," +
 							"effect longtext, " +
-							"sync char(5)" +
+							"sync char(5), " +
+							"server text" +
 							")").executeUpdate();
 		}catch (SQLException e){
 			LOGGER.error("FAIL TO CONNECT MYSQL");
 			LOGGER.error("DID YOU CHANGE MPDS CONFIG?");
 			e.printStackTrace();
 		}
+
+		LOGGER.info("MPDS loaded");
+
 		ServerPlayConnectionEvents.JOIN.register(this::onjoin);
 		ServerPlayConnectionEvents.DISCONNECT.register(this::ondisconnect);
     }
@@ -75,15 +91,29 @@ public class MPDS implements ModInitializer {
 	private void onjoin(ServerPlayNetworkHandler serverPlayNetworkHandler, PacketSender packetSender, MinecraftServer minecraftServer) {
 		ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
 		LOGGER.info("loading " + player.getName().getString() + "'s data...");
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME , USER, PASSWD);
-			 PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +" WHERE uuid = ?")) {
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +" WHERE uuid = ?")) {
 			statement.setString(1, player.getUuid().toString());
 			ResultSet resultSet;
 			if ((resultSet = statement.executeQuery()).next()) {
 				while ("false".equals(resultSet.getString("sync"))) {
-					Thread.sleep(1000);
-					resultSet = statement.executeQuery();
-					resultSet.next();
+					for (int i=0;"false".equals(resultSet.getString("sync"));i++) {
+						if (i == 10) {
+							if (SERVER.equals(resultSet.getString("server"))) {
+								player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
+								LOGGER.info("saved " + player.getName().getString() + "'s correct data");
+								return;
+							}
+							player.sendMessage(Text.translatable("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED));
+							player.sendMessage(Text.translatable("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED));
+							LOGGER.error("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!");
+							LOGGER.error("PLEASE CONNECT TO " + resultSet.getString("server") + "!");
+							broken.add(player.getName().getString());
+							return;
+						}
+						Thread.sleep(1000);
+						resultSet = statement.executeQuery();
+						resultSet.next();
+					}
 				}
 				PreparedStatement befalse = connection.prepareStatement("UPDATE " + TABLE_NAME +" SET sync=\"false\" WHERE uuid = ?");
 				befalse.setString(1, player.getUuid().toString());
@@ -112,24 +142,29 @@ public class MPDS implements ModInitializer {
 						});
 				String effdata;
 				if (!Objects.equals(effdata = resultSet.getString("effect"), "")) {
-					List.of(effdata.split("&")).forEach(effcompound -> serverPlayNetworkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), StatusEffectInstance.fromNbt( NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(effcompound)).resultOrPartial(LOGGER::error).orElseThrow()))));
+					List.of(effdata.split("&")).forEach(effcompound -> serverPlayNetworkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), Objects.requireNonNull(StatusEffectInstance.fromNbt(NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(effcompound)).resultOrPartial(LOGGER::error).orElseThrow())))));
 				}
 				player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
 				LOGGER.info("success to load " + player.getName().getString() + "'s data!");
-			}else {
+			} else {
 				PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + TABLE_NAME + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
 				addplayer.setString(1, player.getName().getString());
 				addplayer.setString(2, player.getUuid().toString());
 				addplayer.executeUpdate();
-				player.sendMessage(Text.translatable("CANNOT FIND " + player.getName().getString() + "'s DATA!").formatted(Formatting.RED));
-				player.sendMessage(Text.translatable("MAKE NEW ONE!").formatted(Formatting.RED));
-				LOGGER.warn("CANNOT FIND " + player.getName().getString() + "'s DATA!");
-				LOGGER.warn("MAKE NEW ONE!");
+				player.sendMessage(Text.translatable("COULD NOT FIND " + player.getName().getString() + "'s DATA!").formatted(Formatting.RED));
+				player.sendMessage(Text.translatable("MADE NEW ONE!").formatted(Formatting.RED));
+				LOGGER.warn("COULD NOT FIND " + player.getName().getString() + "'s DATA!");
+				LOGGER.warn("MADE NEW ONE!");
 			}
+
+			PreparedStatement setserver = connection.prepareStatement("UPDATE " + TABLE_NAME +" SET server=? WHERE uuid = ?");
+			setserver.setString(1, SERVER);
+			setserver.setString(2, player.getUuid().toString());
+			setserver.executeUpdate();
 
 		} catch (SQLException | InterruptedException e) {
 			player.sendMessage(Text.translatable("THERE WERE SOME ERROR WHEN LOAD PLAYER DATA").formatted(Formatting.RED));
-			LOGGER.error("THERE WERE SOME ERROR WHEN LOAD PLAYER DATA:");
+			LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 			e.printStackTrace();
 		}
     }
@@ -137,8 +172,14 @@ public class MPDS implements ModInitializer {
 	private void ondisconnect(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
 		ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
 		LOGGER.info("saving " + player.getName().getString() + "'s data...");
-		try (Connection connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME , USER, PASSWD);
-			 PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET Air=?, Health=?, enderChestInventory=?, exhaustion=?, foodLevel=?, saturationLevel=?, foodTickTimer=?, main=?, off=?, armor=?, selectedSlot=?, experienceLevel=?, experienceProgress=?, effect=?, sync=\"true\" where uuid=?")) {
+
+		if (broken.stream().anyMatch(bplayer -> bplayer.equals(player.getName().getString()))) {
+			LOGGER.warn("skip saving because " + player.getName().getString() + "'s data was broken");
+			broken.remove(player.getName().getString());
+			return;
+		}
+
+		try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET Air=?, Health=?, enderChestInventory=?, exhaustion=?, foodLevel=?, saturationLevel=?, foodTickTimer=?, main=?, off=?, armor=?, selectedSlot=?, experienceLevel=?, experienceProgress=?, effect=?, sync=\"true\" where uuid=?")) {
 			statement.setInt(1, player.getAir());
 			statement.setFloat(2, player.getHealth());
 			statement.setFloat(4, player.getHungerManager().getExhaustion());
@@ -176,7 +217,7 @@ public class MPDS implements ModInitializer {
 			statement.executeUpdate();
 			LOGGER.info("success to save " + player.getName().getString() + "'s data");
 		} catch (SQLException e) {
-			LOGGER.error("FAIL TO SAVE " + player.getName().getString() + "'s DATA");
+			LOGGER.error("FAIL TO SAVE " + player.getName().getString() + "'s DATA:");
 			e.printStackTrace();
 		}
 	}
