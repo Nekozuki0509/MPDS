@@ -16,5 +16,6 @@ DB_NAME=test #String | default: test | comment: it's mysql database name **YOU M
 TABLE_NAME=test #String | default: test | comment: it's mysql table name(auto create)
 USER=test #String | default: test | comment: it's mysql user name
 PASSWD=test #String | default: test | comment: it's mysql user's password
+SERVER=s #String | default: s | comment: it's this server name
 ```
 ## Released on [modrinth](https://modrinth.com/mod/mpds/)
