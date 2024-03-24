@@ -159,6 +159,7 @@ public class MPDS implements ModInitializer {
 			setserver.executeUpdate();
 
 		} catch (SQLException e) {
+			broken.add(player.getName().getString());
 			player.sendSystemMessage(new TranslatableText("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED), Util.NIL_UUID);
 			LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 			e.printStackTrace();
@@ -233,6 +234,7 @@ public class MPDS implements ModInitializer {
 			statement.executeUpdate();
 			LOGGER.info("success to save " + player.getName().getString() + "'s data");
 		} catch (SQLException e) {
+			broken.remove(player.getName().getString());
 			LOGGER.error("FAIL TO SAVE " + player.getName().getString() + "'s DATA:");
 			e.printStackTrace();
 		}
