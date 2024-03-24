@@ -47,7 +47,7 @@ public class MPDS implements ModInitializer {
 		registerConfigs();
 
 		try {
-			connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME+"?autoReconnect=true", USER, PASSWD);
+			connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME + "?autoReconnect=true", USER, PASSWD);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
