@@ -2,6 +2,7 @@ package mpds.mpds;
 
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.HungerManagerAccessor;
 import net.fabricmc.api.ModInitializer;
 
@@ -95,7 +96,7 @@ public class MPDS implements ModInitializer {
 			ResultSet resultSet;
 			if ((resultSet = statement.executeQuery()).next()) {
 				while ("false".equals(resultSet.getString("sync"))) {
-					for (int i=0;"false".equals(resultSet.getString("sync"));i++) {
+					for (int i = 0; "false".equals(resultSet.getString("sync")); i++) {
 						if (i == 10) {
 							if (SERVER.equals(resultSet.getString("server"))) {
 								player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
@@ -114,7 +115,7 @@ public class MPDS implements ModInitializer {
 						resultSet.next();
 					}
 				}
-				PreparedStatement befalse = connection.prepareStatement("UPDATE " + TABLE_NAME +" SET sync=\"false\" WHERE uuid = ?");
+				PreparedStatement befalse = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET sync=\"false\" WHERE uuid = ?");
 				befalse.setString(1, player.getUuid().toString());
 				befalse.executeUpdate();
 				player.setAir(resultSet.getInt("Air"));
@@ -128,17 +129,17 @@ public class MPDS implements ModInitializer {
 				player.experienceLevel = resultSet.getInt("experienceLevel");
 				player.experienceProgress = resultSet.getInt("experienceProgress");
 				List.of(resultSet.getString("enderChestInventory").split("&")).forEach(compound -> {
-							String[] compounds = compound.split("~");
-							player.getEnderChestInventory().setStack(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
-						});
+					String[] compounds = compound.split("~");
+					player.getEnderChestInventory().setStack(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
+				});
 				List.of(resultSet.getString("main").split("&")).forEach(compound -> {
-							String[] compounds = compound.split("~");
-							player.getInventory().main.set(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
-						});
+					String[] compounds = compound.split("~");
+					player.getInventory().main.set(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
+				});
 				List.of(resultSet.getString("armor").split("&")).forEach(compound -> {
-							String[] compounds = compound.split("~");
-							player.getInventory().armor.set(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
-						});
+					String[] compounds = compound.split("~");
+					player.getInventory().armor.set(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
+				});
 				String effdata;
 				if (!Objects.equals(effdata = resultSet.getString("effect"), "")) {
 					List.of(effdata.split("&")).forEach(effcompound -> serverPlayNetworkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), Objects.requireNonNull(StatusEffectInstance.fromNbt(NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(effcompound)).resultOrPartial(LOGGER::error).orElseThrow())))));
@@ -156,19 +157,18 @@ public class MPDS implements ModInitializer {
 				LOGGER.warn("MADE NEW ONE!");
 			}
 
-			PreparedStatement setserver = connection.prepareStatement("UPDATE " + TABLE_NAME +" SET server=? WHERE uuid = ?");
+			PreparedStatement setserver = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET server=? WHERE uuid = ?");
 			setserver.setString(1, SERVER);
 			setserver.setString(2, player.getUuid().toString());
 			setserver.executeUpdate();
-
-		} catch (SQLException e) {
+		} catch (CommunicationsException e) {
+			onjoin(serverPlayNetworkHandler, packetSender, minecraftServer);
+		} catch (SQLException | InterruptedException e) {
 			broken.add(player.getName().getString());
 			player.sendMessage(Text.translatable("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED));
 			LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+		}
     }
 
         private void ondisconnect(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
