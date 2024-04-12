@@ -2,6 +2,7 @@ package mpds.mpds;
 
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.HungerManagerAccessor;
 import net.fabricmc.api.ModInitializer;
 
@@ -157,15 +158,14 @@ public class MPDS implements ModInitializer {
 			setserver.setString(1, SERVER);
 			setserver.setString(2, player.getUuid().toString());
 			setserver.executeUpdate();
-
-		} catch (SQLException e) {
+		} catch (CommunicationsException e) {
+			onjoin(serverPlayNetworkHandler, packetSender, minecraftServer);
+		} catch (SQLException | InterruptedException e) {
 			broken.add(player.getName().getString());
 			player.sendSystemMessage(new TranslatableText("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED), Util.NIL_UUID);
 			LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+		}
     }
 
 	private void ondisconnect(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
