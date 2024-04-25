@@ -9,11 +9,8 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static mpds.mpds.config.ModConfigs.*;
 
@@ -73,7 +69,6 @@ public class MPDS implements ModInitializer {
 							"selectedSlot int," +
 							"experienceLevel int," +
 							"experienceProgress int," +
-							"effect longtext, " +
 							"sync char(5), " +
 							"server text" +
 							")").executeUpdate();
@@ -141,10 +136,6 @@ public class MPDS implements ModInitializer {
 					String[] compounds = compound.split("~");
 					player.getInventory().armor.set(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
 				});
-				String effdata;
-				if (!Objects.equals(effdata = resultSet.getString("effect"), "")) {
-					List.of(effdata.split("&")).forEach(effcompound -> serverPlayNetworkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), Objects.requireNonNull(StatusEffectInstance.fromNbt(NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(effcompound)).resultOrPartial(LOGGER::error).orElseThrow())))));
-				}
 				player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
 				LOGGER.info("success to load " + player.getName().getString() + "'s data!");
 			} else {
@@ -182,7 +173,7 @@ public class MPDS implements ModInitializer {
 			return;
 		}
 
-		try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET Air=?, Health=?, enderChestInventory=?, exhaustion=?, foodLevel=?, saturationLevel=?, foodTickTimer=?, main=?, off=?, armor=?, selectedSlot=?, experienceLevel=?, experienceProgress=?, effect=?, sync=\"true\" where uuid=?")) {
+		try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET Air=?, Health=?, enderChestInventory=?, exhaustion=?, foodLevel=?, saturationLevel=?, foodTickTimer=?, main=?, off=?, armor=?, selectedSlot=?, experienceLevel=?, experienceProgress=?, sync=\"true\" where uuid=?")) {
 			statement.setInt(1, player.getAir());
 			statement.setFloat(2, player.getHealth());
 			statement.setFloat(4, player.getHungerManager().getExhaustion());
@@ -212,11 +203,6 @@ public class MPDS implements ModInitializer {
 				armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
 			}
 			statement.setString(10, armorresults.toString());
-			StringBuilder effresults = new StringBuilder();
-			for (StatusEffectInstance statusEffect : player.getStatusEffects()) {
-				effresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, statusEffect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&");
-			}
-			statement.setString(14, effresults.toString());
 			statement.executeUpdate();
 			LOGGER.info("success to save " + player.getName().getString() + "'s data");
 		} catch (SQLException e) {
