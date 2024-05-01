@@ -1,6 +1,8 @@
 package mpds.mpds;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.mojang.serialization.JsonOps;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.HungerManagerAccessor;
@@ -8,6 +10,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -20,11 +23,15 @@ import net.minecraft.util.collection.DefaultedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static mpds.mpds.config.ModConfigs.*;
+import java.util.Map;
+import java.util.Objects;
 
 public class MPDS implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("mpds");
@@ -32,6 +39,12 @@ public class MPDS implements ModInitializer {
 	public static Connection connection = null;
 
 	static final List<String> broken = new ArrayList<>();
+	
+	static Path configjson;
+	
+	static Map<String, String> config;
+	
+	public static Gson gson = new Gson();
 
     @Override
 	public void onInitialize() {
@@ -41,10 +54,22 @@ public class MPDS implements ModInitializer {
             throw new RuntimeException(e);
         }
 
-		registerConfigs();
+		configjson = FabricLoader.getInstance().getConfigDir().resolve("mpdsconfig.json");
+		if (Files.notExists(configjson)) {
+            try {
+                Files.copy(Objects.requireNonNull(MPDS.class.getResourceAsStream("/mpdsconfig.json")), configjson);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+		try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(String.valueOf(configjson)), StandardCharsets.UTF_8))) {
+			config = gson.fromJson(reader, new TypeToken<Map<String, String>>() {}.getType());
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-		try {
-			connection = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + DB_NAME + "?autoReconnect=true", USER, PASSWD);
+        try {
+			connection = DriverManager.getConnection("jdbc:mysql://" + config.get("HOST") + "/" + config.get("DB_NAME") + "?autoReconnect=true", config.get("USER"), config.get("PASSWD"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -53,7 +78,7 @@ public class MPDS implements ModInitializer {
 
         try {
 			connection.prepareStatement
-					("CREATE TABLE IF NOT EXISTS " + TABLE_NAME +"(" +
+					("CREATE TABLE IF NOT EXISTS " + config.get("TABLE_NAME") +"(" +
 							"id int auto_increment PRIMARY KEY," +
 							"Name char(16)," +
 							"uuid char(36)," +
@@ -85,15 +110,15 @@ public class MPDS implements ModInitializer {
 	private void onjoin(ServerPlayNetworkHandler serverPlayNetworkHandler, PacketSender packetSender, MinecraftServer minecraftServer) {
 		new Thread(() -> {
             ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
-			player.sendSystemMessage(new TranslatableText("loading " + player.getName().getString() + "'s data...").formatted(Formatting.AQUA), Util.NIL_UUID);
+			player.sendSystemMessage(new TranslatableText("loading " + player.getName().getString() + "'s data...").formatted(Formatting.YELLOW), Util.NIL_UUID);
             LOGGER.info("loading " + player.getName().getString() + "'s data...");
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE uuid = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + config.get("TABLE_NAME") + " WHERE uuid = ?")) {
                 statement.setString(1, player.getUuid().toString());
                 ResultSet resultSet;
                 if ((resultSet = statement.executeQuery()).next()) {
                     for (int i = 0; "false".equals(resultSet.getString("sync")); i++) {
                         if (i == 10) {
-                            if (SERVER.equals(resultSet.getString("server"))) {
+                            if (config.get("SERVER").equals(resultSet.getString("server"))) {
                                 player.sendSystemMessage(new TranslatableText("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA), Util.NIL_UUID);
                                 LOGGER.info("saved " + player.getName().getString() + "'s correct data");
                                 return;
@@ -109,7 +134,7 @@ public class MPDS implements ModInitializer {
                         resultSet = statement.executeQuery();
                         resultSet.next();
                     }
-                    PreparedStatement befalse = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET sync=\"false\" WHERE uuid = ?");
+                    PreparedStatement befalse = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET sync=\"false\" WHERE uuid = ?");
                     befalse.setString(1, player.getUuid().toString());
                     befalse.executeUpdate();
                     player.setAir(resultSet.getInt("Air"));
@@ -137,7 +162,7 @@ public class MPDS implements ModInitializer {
                     player.sendSystemMessage(new TranslatableText("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA), Util.NIL_UUID);
                     LOGGER.info("success to load " + player.getName().getString() + "'s data!");
                 } else {
-                    PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + TABLE_NAME + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
+                    PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + config.get("TABLE_NAME") + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
                     addplayer.setString(1, player.getName().getString());
                     addplayer.setString(2, player.getUuid().toString());
                     addplayer.executeUpdate();
@@ -147,8 +172,8 @@ public class MPDS implements ModInitializer {
                     LOGGER.warn("MADE NEW ONE!");
                 }
 
-                PreparedStatement setserver = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET server=? WHERE uuid = ?");
-                setserver.setString(1, SERVER);
+                PreparedStatement setserver = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET server=? WHERE uuid = ?");
+                setserver.setString(1, config.get("SERVER"));
                 setserver.setString(2, player.getUuid().toString());
                 setserver.executeUpdate();
             } catch (CommunicationsException e) {
@@ -173,7 +198,7 @@ public class MPDS implements ModInitializer {
 				return;
 			}
 
-			try (PreparedStatement statement = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET Air=?, Health=?, enderChestInventory=?, exhaustion=?, foodLevel=?, saturationLevel=?, foodTickTimer=?, main=?, off=?, armor=?, selectedSlot=?, experienceLevel=?, experienceProgress=?, sync=\"true\" where uuid=?")) {
+			try (PreparedStatement statement = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET Air=?, Health=?, enderChestInventory=?, exhaustion=?, foodLevel=?, saturationLevel=?, foodTickTimer=?, main=?, off=?, armor=?, selectedSlot=?, experienceLevel=?, experienceProgress=?, sync=\"true\" where uuid=?")) {
 				statement.setInt(1, player.getAir());
 				statement.setFloat(2, player.getHealth());
 				statement.setFloat(4, player.getHungerManager().getExhaustion());
