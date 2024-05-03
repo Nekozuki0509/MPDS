@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -125,14 +126,14 @@ public class MPDS implements ModInitializer {
 								if (config.get("SERVER").equals(resultSet.getString("server"))) {
 									player.sendSystemMessage(new TranslatableText("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA), Util.NIL_UUID);
 									LOGGER.info("saved " + player.getName().getString() + "'s correct data");
-									player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f);
+									player.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f));
 									return;
 								}
 								player.sendSystemMessage(new TranslatableText("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED), Util.NIL_UUID);
 								player.sendSystemMessage(new TranslatableText("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED), Util.NIL_UUID);
 								LOGGER.error("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!");
 								LOGGER.error("PLEASE CONNECT TO " + resultSet.getString("server") + "!");
-								player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1f, 1f);
+								player.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f));
 								broken.add(player.getName().getString());
 								return;
 							}
@@ -167,7 +168,7 @@ public class MPDS implements ModInitializer {
 						});
 						player.sendSystemMessage(new TranslatableText("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA), Util.NIL_UUID);
 						LOGGER.info("success to load " + player.getName().getString() + "'s data!");
-						player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f);
+						player.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f));
 					} else {
 						PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + config.get("TABLE_NAME") + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
 						addplayer.setString(1, player.getName().getString());
@@ -177,7 +178,7 @@ public class MPDS implements ModInitializer {
 						player.sendSystemMessage(new TranslatableText("MADE NEW ONE!").formatted(Formatting.RED), Util.NIL_UUID);
 						LOGGER.warn("COULD NOT FIND " + player.getName().getString() + "'s DATA!");
 						LOGGER.warn("MADE NEW ONE!");
-						player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1f, 1f);
+						player.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f));
 					}
 
 					PreparedStatement setserver = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET server=? WHERE uuid = ?");
@@ -189,7 +190,7 @@ public class MPDS implements ModInitializer {
 				} catch (SQLException | InterruptedException e) {
 					broken.add(player.getName().getString());
 					player.sendSystemMessage(new TranslatableText("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED), Util.NIL_UUID);
-					player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1f, 1f);
+					player.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f));
 					LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 					e.printStackTrace();
 					return;
