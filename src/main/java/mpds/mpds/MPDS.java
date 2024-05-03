@@ -175,7 +175,7 @@ public class MPDS implements ModInitializer {
 						player.sendMessage(Text.translatable("MADE NEW ONE!").formatted(Formatting.RED));
 						LOGGER.warn("COULD NOT FIND " + player.getName().getString() + "'s DATA!");
 						LOGGER.warn("MADE NEW ONE!");
-						player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1, 1);
+						player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
 					}
 
 					PreparedStatement setserver = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET server=? WHERE uuid = ?");
