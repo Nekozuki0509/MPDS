@@ -123,14 +123,14 @@ public class MPDS implements ModInitializer {
 								if (config.get("SERVER").equals(resultSet.getString("server"))) {
 									player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
 									LOGGER.info("saved " + player.getName().getString() + "'s correct data");
-									player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1, 1);
+									player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1f, 1f);
 									break;
 								}
 								player.sendMessage(Text.translatable("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED));
 								player.sendMessage(Text.translatable("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED));
 								LOGGER.error("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!");
 								LOGGER.error("PLEASE CONNECT TO " + resultSet.getString("server") + "!");
-								player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1, 1);
+								player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
 								broken.add(player.getName().getString());
 								break;
 							}
@@ -165,7 +165,7 @@ public class MPDS implements ModInitializer {
 						});
 						player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
 						LOGGER.info("success to load " + player.getName().getString() + "'s data!");
-						player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1, 1);
+						player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1f, 1f);
 					} else {
 						PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + config.get("TABLE_NAME") + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
 						addplayer.setString(1, player.getName().getString());
@@ -187,7 +187,7 @@ public class MPDS implements ModInitializer {
 				} catch (SQLException | InterruptedException e) {
 					broken.add(player.getName().getString());
 					player.sendMessage(Text.translatable("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED));
-					player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1, 1);
+					player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
 					LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 					e.printStackTrace();
 					break;
