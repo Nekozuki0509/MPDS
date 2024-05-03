@@ -124,7 +124,7 @@ public class MPDS implements ModInitializer {
 									player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
 									LOGGER.info("saved " + player.getName().getString() + "'s correct data");
 									player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1f, 1f);
-									break;
+									return;
 								}
 								player.sendMessage(Text.translatable("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED));
 								player.sendMessage(Text.translatable("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED));
@@ -132,7 +132,7 @@ public class MPDS implements ModInitializer {
 								LOGGER.error("PLEASE CONNECT TO " + resultSet.getString("server") + "!");
 								player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
 								broken.add(player.getName().getString());
-								break;
+								return;
 							}
 							Thread.sleep(1000);
 							resultSet = statement.executeQuery();
@@ -182,7 +182,7 @@ public class MPDS implements ModInitializer {
 					setserver.setString(1, config.get("SERVER"));
 					setserver.setString(2, player.getUuid().toString());
 					setserver.executeUpdate();
-					break;
+					return;
 				} catch (CommunicationsException ignored) {
 				} catch (SQLException | InterruptedException e) {
 					broken.add(player.getName().getString());
@@ -190,7 +190,7 @@ public class MPDS implements ModInitializer {
 					player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
 					LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 					e.printStackTrace();
-					break;
+					return;
 				}
 			}
 		}).start();
@@ -240,13 +240,13 @@ public class MPDS implements ModInitializer {
 					statement.setString(10, armorresults.toString());
 					statement.executeUpdate();
 					LOGGER.info("success to save " + player.getName().getString() + "'s data");
-					break;
+					return;
 				} catch (CommunicationsException ignored) {
 				} catch (SQLException e) {
 					broken.remove(player.getName().getString());
 					LOGGER.error("FAIL TO SAVE " + player.getName().getString() + "'s DATA:");
 					e.printStackTrace();
-					break;
+					return;
 				}
 			}
 		}).start();
