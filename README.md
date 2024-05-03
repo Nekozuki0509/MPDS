@@ -11,11 +11,19 @@ it's a fabric mod to sync player data between fabric servers. this needs only se
 1. let's play!
 ## config file
 ```
-HOST=000.000.000.000 #String | default: 000.000.000.000 | comment: it's mysql host ip
-DB_NAME=test #String | default: test | comment: it's mysql database name **YOU MUST CREATE THIS DB!!**
-TABLE_NAME=test #String | default: test | comment: it's mysql table name(auto create)
-USER=test #String | default: test | comment: it's mysql user name
-PASSWD=test #String | default: test | comment: it's mysql user's password
-SERVER=s #String | default: s | comment: it's this server name
+{
+  "_Hcomment_" : "it's mysql host ip",
+  "HOST" : "000.000.000.000",
+  "_Dcomment_" : "it's mysql database name **YOU MUST CREATE THIS DB!!**",
+  "DB_NAME" : "test",
+  "_Tcomment_" : "it's mysql table name(auto create)",
+  "TABLE_NAME" : "test",
+  "_Ucomment_" : "it's mysql user name",
+  "USER" : "test",
+  "_Pcomment_" : "it's mysql user's password",
+  "PASSWD" : "test",
+  "_Scomment_" : "it's this server name",
+  "SERVER" : "s"
+}
 ```
 ## Released on [modrinth](https://modrinth.com/mod/mpds/)
