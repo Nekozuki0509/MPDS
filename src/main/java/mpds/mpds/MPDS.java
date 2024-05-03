@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -124,14 +125,14 @@ public class MPDS implements ModInitializer {
 								if (config.get("SERVER").equals(resultSet.getString("server"))) {
 									player.sendSystemMessage(new TranslatableText("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA), Util.NIL_UUID);
 									LOGGER.info("saved " + player.getName().getString() + "'s correct data");
-									player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+									player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f);
 									return;
 								}
 								player.sendSystemMessage(new TranslatableText("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED), Util.NIL_UUID);
 								player.sendSystemMessage(new TranslatableText("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED), Util.NIL_UUID);
 								LOGGER.error("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!");
 								LOGGER.error("PLEASE CONNECT TO " + resultSet.getString("server") + "!");
-								player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
+								player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1f, 1f);
 								broken.add(player.getName().getString());
 								return;
 							}
@@ -166,7 +167,7 @@ public class MPDS implements ModInitializer {
 						});
 						player.sendSystemMessage(new TranslatableText("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA), Util.NIL_UUID);
 						LOGGER.info("success to load " + player.getName().getString() + "'s data!");
-						player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+						player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f);
 					} else {
 						PreparedStatement addplayer = connection.prepareStatement("INSERT INTO " + config.get("TABLE_NAME") + " (Name, uuid, sync) VALUES (?, ?, \"false\")");
 						addplayer.setString(1, player.getName().getString());
@@ -176,7 +177,7 @@ public class MPDS implements ModInitializer {
 						player.sendSystemMessage(new TranslatableText("MADE NEW ONE!").formatted(Formatting.RED), Util.NIL_UUID);
 						LOGGER.warn("COULD NOT FIND " + player.getName().getString() + "'s DATA!");
 						LOGGER.warn("MADE NEW ONE!");
-						player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
+						player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1f, 1f);
 					}
 
 					PreparedStatement setserver = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET server=? WHERE uuid = ?");
@@ -188,7 +189,7 @@ public class MPDS implements ModInitializer {
 				} catch (SQLException | InterruptedException e) {
 					broken.add(player.getName().getString());
 					player.sendSystemMessage(new TranslatableText("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED), Util.NIL_UUID);
-					player.playSound(SoundEvents.BLOCK_ANVIL_DESTROY, 1f, 1f);
+					player.getWorld().playSound(player, player.getBlockPos(), SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, 1f, 1f);
 					LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 					e.printStackTrace();
 					return;
