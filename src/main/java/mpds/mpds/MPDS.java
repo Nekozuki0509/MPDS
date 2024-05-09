@@ -57,41 +57,19 @@ public class MPDS implements ModInitializer {
 
 	public static Gson gson = new Gson();
 
-	PreparedStatement onjoinstatement = connection.prepareStatement("SELECT * FROM " + config.get("TABLE_NAME") + " WHERE uuid = ?");
+	PreparedStatement onjoinstatement;
 
-	PreparedStatement checkskip = connection.prepareStatement("SELECT skip FROM skipplayer WHERE Name = ?");
+	PreparedStatement checkskip;
 
-	PreparedStatement showskip = connection.prepareStatement("SELECT * FROM skipplayer");
+	PreparedStatement showskip;
 
-	PreparedStatement updateskip = connection.prepareStatement("INSERT INTO skip (Name, skip) VALUES (?, ?) AS new ON DUPLICATE KEY UPDATE Name=new.Name, skip=new.skip");
+	PreparedStatement updateskip;
 
-	PreparedStatement befalse = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET sync=\"false\" WHERE uuid = ?");
+	PreparedStatement befalse;
 
-	PreparedStatement setserver = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET server=? WHERE uuid = ?");
+	PreparedStatement setserver;
 
-	PreparedStatement ondisconnectstatement = connection.prepareStatement("INSERT INTO " + config.get("TABLE_NAME") +
-			" (Name, uuid, Air, Health, enderChestInventory, exhaustion, foodLevel, saturationLevel, foodTickTimer, main, off, armor, selectedSlot, experienceLevel, experienceProgress, effects, sync) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, \"true\") AS new " +
-			"ON DUPLICATE KEY UPDATE " +
-			"Air=new.Air," +
-			"Health=new.Health," +
-			"enderChestInventory=new.enderChestInventory," +
-			"exhaustion=new.exhaustion," +
-			"foodLevel=new.foodLevel," +
-			"saturationLevel=new.saturationLevel," +
-			"foodTickTimer=new.foodTickTimer," +
-			"main=new.main," +
-			"off=new.off," +
-			"armor=new.armor," +
-			"selectedSlot=new.selectedSlot," +
-			"experienceLevel=new.experienceLevel," +
-			"experienceProgress=new.experienceProgress," +
-			"effects=new,effects," +
-			"sync=new.sync");
-
-	public MPDS() throws SQLException {
-	}
-
+	PreparedStatement ondisconnectstatement;
 	@Override
 	public void onInitialize() {
         try {
@@ -115,12 +93,40 @@ public class MPDS implements ModInitializer {
 		}
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + config.get("HOST") + "/" + config.get("DB_NAME") + "?autoReconnect=true", config.get("USER"), config.get("PASSWD"));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+			onjoinstatement = connection.prepareStatement("SELECT * FROM " + config.get("TABLE_NAME") + " WHERE uuid = ?");
 
-        try {
+			checkskip = connection.prepareStatement("SELECT skip FROM skipplayer WHERE Name = ?");
+
+			showskip = connection.prepareStatement("SELECT * FROM skipplayer");
+
+			updateskip = connection.prepareStatement("INSERT INTO skip (Name, skip) VALUES (?, ?) AS new ON DUPLICATE KEY UPDATE Name=new.Name, skip=new.skip");
+
+			befalse = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET sync=\"false\" WHERE uuid = ?");
+
+			setserver = connection.prepareStatement("UPDATE " + config.get("TABLE_NAME") + " SET server=? WHERE uuid = ?");
+
+			ondisconnectstatement = connection.prepareStatement("INSERT INTO " + config.get("TABLE_NAME") +
+					" (Name, uuid, Air, Health, enderChestInventory, exhaustion, foodLevel, saturationLevel, foodTickTimer, main, off, armor, selectedSlot, experienceLevel, experienceProgress, effects, sync) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, \"true\") AS new " +
+					"ON DUPLICATE KEY UPDATE " +
+					"Air=new.Air," +
+					"Health=new.Health," +
+					"enderChestInventory=new.enderChestInventory," +
+					"exhaustion=new.exhaustion," +
+					"foodLevel=new.foodLevel," +
+					"saturationLevel=new.saturationLevel," +
+					"foodTickTimer=new.foodTickTimer," +
+					"main=new.main," +
+					"off=new.off," +
+					"armor=new.armor," +
+					"selectedSlot=new.selectedSlot," +
+					"experienceLevel=new.experienceLevel," +
+					"experienceProgress=new.experienceProgress," +
+					"effects=new,effects," +
+					"sync=new.sync");
+
+			connection = DriverManager.getConnection("jdbc:mysql://" + config.get("HOST") + "/" + config.get("DB_NAME") + "?autoReconnect=true", config.get("USER"), config.get("PASSWD"));
+
 			connection.prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + config.get("TABLE_NAME") +"(" +
 							"id int AUTO_INCREMENT PRIMARY KEY," +
