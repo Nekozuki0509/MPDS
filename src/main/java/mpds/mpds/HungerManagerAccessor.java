@@ -1,4 +1,4 @@
-package mpds.mpds.mixin;
+package mpds.mpds;
 
 
 import net.minecraft.entity.player.HungerManager;
