@@ -276,7 +276,7 @@ public class MPDS implements ModInitializer {
 					return;
 				} catch (CommunicationsException ignored) {
 				} catch (Exception e) {
-					player.sendSystemMessage(new TranslatableText("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA").formatted(Formatting.RED), Util.NIL_UUID);
+					player.sendSystemMessage(new TranslatableText("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA : \n" + e.getMessage()).formatted(Formatting.RED), Util.NIL_UUID);
 					player.networkHandler.sendPacket(new PlaySoundS2CPacket(SoundEvents.BLOCK_ANVIL_DESTROY, SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f));
 					LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
 					e.printStackTrace();
