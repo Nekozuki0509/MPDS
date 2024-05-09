@@ -93,6 +93,8 @@ public class MPDS implements ModInitializer {
 		}
 
         try {
+			connection = DriverManager.getConnection("jdbc:mysql://" + config.get("HOST") + "/" + config.get("DB_NAME") + "?autoReconnect=true", config.get("USER"), config.get("PASSWD"));
+
 			onjoinstatement = connection.prepareStatement("SELECT * FROM " + config.get("TABLE_NAME") + " WHERE uuid = ?");
 
 			checkskip = connection.prepareStatement("SELECT skip FROM skipplayer WHERE Name = ?");
@@ -124,8 +126,6 @@ public class MPDS implements ModInitializer {
 					"experienceProgress=new.experienceProgress," +
 					"effects=new,effects," +
 					"sync=new.sync");
-
-			connection = DriverManager.getConnection("jdbc:mysql://" + config.get("HOST") + "/" + config.get("DB_NAME") + "?autoReconnect=true", config.get("USER"), config.get("PASSWD"));
 
 			connection.prepareStatement
 					("CREATE TABLE IF NOT EXISTS " + config.get("TABLE_NAME") +"(" +
