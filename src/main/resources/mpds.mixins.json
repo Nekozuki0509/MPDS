@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "mpds.mpds.mixin",
+  "package": "mpds.mpds",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "HungerManagerAccessor"
