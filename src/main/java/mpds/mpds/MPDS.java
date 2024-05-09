@@ -124,7 +124,7 @@ public class MPDS implements ModInitializer {
 					"selectedSlot=new.selectedSlot," +
 					"experienceLevel=new.experienceLevel," +
 					"experienceProgress=new.experienceProgress," +
-					"effects=new,effects," +
+					"effects=new.effects," +
 					"sync=new.sync");
 
 			connection.prepareStatement
