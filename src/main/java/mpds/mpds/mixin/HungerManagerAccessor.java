@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface HungerManagerAccessor {
     @Accessor("foodTickTimer")
     public void setFoodTickTimer(int foodTickTimer);
+
     @Accessor
     int getFoodTickTimer();
 }
