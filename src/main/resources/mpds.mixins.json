@@ -3,7 +3,8 @@
   "package": "mpds.mpds.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "HungerManagerAccessor"
+    "HungerManagerAccessor",
+    "PlayerManagerInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
