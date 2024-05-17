@@ -173,15 +173,21 @@ public class MPDS implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(literal("updateskip").then(argument("player", StringArgumentType.word()).then(argument("skip", BoolArgumentType.bool())
                         .executes(ctx -> {
-                            try {
-                                updateskip.setString(1, StringArgumentType.getString(ctx, "player"));
-                                updateskip.setString(2, String.valueOf(BoolArgumentType.getBool(ctx, "skip")));
-                                updateskip.executeUpdate();
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
+                            while (true) {
+                                try {
+                                    updateskip.setString(1, StringArgumentType.getString(ctx, "player"));
+                                    updateskip.setString(2, String.valueOf(BoolArgumentType.getBool(ctx, "skip")));
+                                    updateskip.executeUpdate();
+                                    ctx.getSource().getServer().getPlayerManager().broadcast(Text.translatable("set " + StringArgumentType.getString(ctx, "player") + "'s data " + BoolArgumentType.getBool(ctx, "skip")).formatted(Formatting.YELLOW), false);
+                                    return 1;
+                                } catch (CommunicationsException ignored) {
+                                } catch (Exception e) {
+                                    ctx.getSource().getServer().getPlayerManager().broadcast(Text.translatable("THERE WERE SOME ERRORS : \n" + e.getMessage()).formatted(Formatting.RED), false);
+                                    LOGGER.error("THERE WERE SOME ERRORS :");
+                                    e.printStackTrace();
+                                    return 1;
+                                }
                             }
-                            ctx.getSource().getServer().getPlayerManager().broadcast(Text.translatable("set " + StringArgumentType.getString(ctx, "player") + "'s data " + BoolArgumentType.getBool(ctx, "skip")).formatted(Formatting.YELLOW), false);
-                            return 1;
                         })
                 ))));
 
@@ -190,22 +196,28 @@ public class MPDS implements ModInitializer {
                         .executes(ctx -> {
                             ResultSet skiprs;
                             StringBuilder skipp = new StringBuilder();
-                            try {
-                                skiprs = showskip.executeQuery();
-                                while (skiprs.next()) {
-                                    if ("false".equals(skiprs.getString("skip"))) continue;
-                                    skipp.append("・").append(skiprs.getString("Name")).append("\n");
+                            while (true) {
+                                try {
+                                    skiprs = showskip.executeQuery();
+                                    while (skiprs.next()) {
+                                        if ("false".equals(skiprs.getString("skip"))) continue;
+                                        skipp.append("・").append(skiprs.getString("Name")).append("\n");
+                                    }
+                                    ServerPlayerEntity player;
+                                    if ((player = ctx.getSource().getPlayer()) != null) {
+                                        player.sendMessage(Text.of(skipp.toString()));
+                                    } else {
+                                        ctx.getSource().getServer().sendMessage(Text.of(skipp.toString()));
+                                    }
+                                    return 1;
+                                } catch (CommunicationsException ignored) {
+                                } catch (Exception e) {
+                                    ctx.getSource().getServer().getPlayerManager().broadcast(Text.translatable("THERE WERE SOME ERRORS : \n" + e.getMessage()).formatted(Formatting.RED), false);
+                                    LOGGER.error("THERE WERE SOME ERRORS :");
+                                    e.printStackTrace();
+                                    return 1;
                                 }
-                                ServerPlayerEntity player;
-                                if ((player = ctx.getSource().getPlayer()) != null) {
-                                    player.sendMessage(Text.of(skipp.toString()));
-                                } else {
-                                    ctx.getSource().getServer().sendMessage(Text.of(skipp.toString()));
-                                }
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
                             }
-                            return 1;
                         })
                 ));
 
@@ -217,40 +229,36 @@ public class MPDS implements ModInitializer {
             ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
             broken.add(player.getUuid());
             player.sendMessage(Text.translatable("loading " + player.getName().getString() + "'s data...").formatted(Formatting.YELLOW));
-            LOGGER.info("loading " + player.getName().getString() + "'s data...");
-            try {
-                checkskip.setString(1, player.getName().getString());
-                ResultSet checkskiprs = checkskip.executeQuery();
-                if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
-                    minecraftServer.getPlayerManager().broadcast(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
-                    player.sendMessage(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW));
-                    LOGGER.warn("skip loading because " + player.getName().getString() + "'s data includes skip list");
-                    broken.remove(player.getUuid());
-                    player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_GLASS_BREAK), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
-                    player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
-                    return;
-                }
-                onjoinstatement.setString(1, player.getUuid().toString());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            LOGGER.info("loading {}'s data...", player.getName().getString());
             while (true) {
                 try {
+                    checkskip.setString(1, player.getName().getString());
+                    ResultSet checkskiprs = checkskip.executeQuery();
+                    if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
+                        minecraftServer.getPlayerManager().broadcast(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
+                        player.sendMessage(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW));
+                        LOGGER.warn("skip loading because {}'s data includes skip list", player.getName().getString());
+                        broken.remove(player.getUuid());
+                        player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_GLASS_BREAK), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
+                        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
+                        return;
+                    }
+                    onjoinstatement.setString(1, player.getUuid().toString());
                     ResultSet resultSet;
                     if ((resultSet = onjoinstatement.executeQuery()).next()) {
                         for (int i = 0; "false".equals(resultSet.getString("sync")); i++) {
                             if (i == 10) {
                                 if (config.get("SERVER").equals(resultSet.getString("server")) || "*".equals(resultSet.getString("server"))) {
                                     player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
-                                    LOGGER.info("saved " + player.getName().getString() + "'s correct data");
+                                    LOGGER.info("saved {}'s correct data", player.getName().getString());
                                     broken.remove(player.getUuid());
                                     player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.ENTITY_PLAYER_LEVELUP), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                                     return;
                                 }
                                 player.sendMessage(Text.translatable("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED));
                                 player.sendMessage(Text.translatable("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED));
-                                LOGGER.error("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!");
-                                LOGGER.error("PLEASE CONNECT TO " + resultSet.getString("server") + "!");
+                                LOGGER.error("IT LOOKS {}'s DATA WAS BROKEN!", player.getName().getString());
+                                LOGGER.error("PLEASE CONNECT TO {}!", resultSet.getString("server"));
                                 player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_ANVIL_DESTROY), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                                 return;
                             }
@@ -289,20 +297,19 @@ public class MPDS implements ModInitializer {
                         if (!"".equals(resultSet.getString("effects")))
                             List.of(resultSet.getString("effects").split("&")).forEach(compound -> player.addStatusEffect(StatusEffectInstance.fromNbt(NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compound)).resultOrPartial(LOGGER::error).orElseThrow())));
                         player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
-                        LOGGER.info("success to load " + player.getName().getString() + "'s data!");
+                        LOGGER.info("success to load {}'s data!", player.getName().getString());
                         player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.ENTITY_PLAYER_LEVELUP), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                         setserver.setString(1, config.get("SERVER"));
                         setserver.setString(2, player.getUuid().toString());
                         setserver.executeUpdate();
                         broken.remove(player.getUuid());
-                        return;
                     } else {
                         Thread.sleep(1000);
                         for (int i = 1; !onjoinstatement.executeQuery().next(); i++) {
                             if (i == 10) {
                                 player.sendMessage(Text.translatable("COULD NOT FIND " + player.getName().getString() + "'s DATA!").formatted(Formatting.RED));
                                 player.sendMessage(Text.translatable("MADE NEW ONE!").formatted(Formatting.RED));
-                                LOGGER.warn("COULD NOT FIND " + player.getName().getString() + "'s DATA!");
+                                LOGGER.warn("COULD NOT FIND {}'s DATA!", player.getName().getString());
                                 LOGGER.warn("MADE NEW ONE!");
                                 player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_GLASS_BREAK), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                                 broken.remove(player.getUuid());
@@ -311,8 +318,12 @@ public class MPDS implements ModInitializer {
                             Thread.sleep(1000);
                         }
                     }
+                    break;
                 } catch (CommunicationsException ignored) {
                 } catch (Exception e) {
+                    player.getInventory().clear();
+                    player.getEnderChestInventory().clear();
+                    player.clearStatusEffects();
                     player.sendMessage(Text.translatable("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA : \n" + e.getMessage()).formatted(Formatting.RED));
                     player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_ANVIL_DESTROY), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                     LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
@@ -326,85 +337,79 @@ public class MPDS implements ModInitializer {
     private void ondisconnect(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
         new Thread(() -> {
             ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
-            LOGGER.info("saving " + player.getName().getString() + "'s data...");
-
-            try {
-                checkskip.setString(1, player.getName().getString());
-                ResultSet checkskiprs = checkskip.executeQuery();
-                if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
-                    minecraftServer.getPlayerManager().broadcast(Text.translatable("skip saving because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
-                    LOGGER.warn("skip saving because " + player.getName().getString() + "'s data includes skip list");
-                    player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
-                    bea.setString(1, player.getUuidAsString());
-                    bea.executeUpdate();
-                    befalse.setString(1, player.getUuid().toString());
-                    befalse.executeUpdate();
-                    return;
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (broken.stream().anyMatch(bplayer -> bplayer.equals(player.getUuid()))) {
-                LOGGER.warn("skip saving because " + player.getName().getString() + "'s data was broken");
-                broken.remove(player.getUuid());
-                player.getInventory().clear();
-                player.getEnderChestInventory().clear();
-                player.clearStatusEffects();
-                ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
-                return;
-            }
-
-            try {
-                ondisconnectstatement.setString(1, player.getName().getString());
-                ondisconnectstatement.setString(2, player.getUuidAsString());
-                ondisconnectstatement.setInt(3, player.getAir());
-                ondisconnectstatement.setFloat(4, player.getHealth());
-                ondisconnectstatement.setFloat(6, player.getHungerManager().getExhaustion());
-                ondisconnectstatement.setInt(7, player.getHungerManager().getFoodLevel());
-                ondisconnectstatement.setFloat(8, player.getHungerManager().getSaturationLevel());
-                ondisconnectstatement.setInt(9, ((HungerManagerAccessor) player.getHungerManager()).getFoodTickTimer());
-                ondisconnectstatement.setInt(13, player.getInventory().selectedSlot);
-                ondisconnectstatement.setInt(14, player.experienceLevel);
-                ondisconnectstatement.setFloat(15, player.experienceProgress);
-                ondisconnectstatement.setString(11, player.getInventory().offHand.get(0).isEmpty() ? "" : ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString());
-                EnderChestInventory end = player.getEnderChestInventory();
-                StringBuilder endresults = new StringBuilder();
-                for (int i = 0; i < end.size() && !end.getStack(i).isEmpty(); i++) {
-                    endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                }
-                ondisconnectstatement.setString(5, endresults.toString());
-                DefaultedList<ItemStack> main = player.getInventory().main;
-                StringBuilder mainresults = new StringBuilder();
-                for (int i = 0; i < main.size() && !main.get(i).isEmpty(); i++) {
-                    mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                }
-                ondisconnectstatement.setString(10, mainresults.toString());
-                DefaultedList<ItemStack> armor = player.getInventory().armor;
-                StringBuilder armorresults = new StringBuilder();
-                for (int i = 0; i < armor.size() && !armor.get(i).isEmpty(); i++) {
-                    armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                }
-                ondisconnectstatement.setString(12, armorresults.toString());
-                StringBuilder effectresults = new StringBuilder();
-                player.getStatusEffects().forEach(effect -> effectresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
-                ondisconnectstatement.setString(16, effectresults.toString());
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            LOGGER.info("saving {}'s data...", player.getName().getString());
 
             while (true) {
                 try {
+                    checkskip.setString(1, player.getName().getString());
+                    ResultSet checkskiprs = checkskip.executeQuery();
+                    if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
+                        minecraftServer.getPlayerManager().broadcast(Text.translatable("skip saving because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
+                        LOGGER.warn("skip saving because {}'s data includes skip list", player.getName().getString());
+                        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
+                        bea.setString(1, player.getUuidAsString());
+                        bea.executeUpdate();
+                        befalse.setString(1, player.getUuid().toString());
+                        befalse.executeUpdate();
+                        return;
+                    }
+
+                    if (broken.stream().anyMatch(bplayer -> bplayer.equals(player.getUuid()))) {
+                        LOGGER.warn("skip saving because {}'s data was broken", player.getName().getString());
+                        broken.remove(player.getUuid());
+                        player.getInventory().clear();
+                        player.getEnderChestInventory().clear();
+                        player.clearStatusEffects();
+                        ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
+                        return;
+                    }
+
+                    ondisconnectstatement.setString(1, player.getName().getString());
+                    ondisconnectstatement.setString(2, player.getUuidAsString());
+                    ondisconnectstatement.setInt(3, player.getAir());
+                    ondisconnectstatement.setFloat(4, player.getHealth());
+                    ondisconnectstatement.setFloat(6, player.getHungerManager().getExhaustion());
+                    ondisconnectstatement.setInt(7, player.getHungerManager().getFoodLevel());
+                    ondisconnectstatement.setFloat(8, player.getHungerManager().getSaturationLevel());
+                    ondisconnectstatement.setInt(9, ((HungerManagerAccessor) player.getHungerManager()).getFoodTickTimer());
+                    ondisconnectstatement.setInt(13, player.getInventory().selectedSlot);
+                    ondisconnectstatement.setInt(14, player.experienceLevel);
+                    ondisconnectstatement.setFloat(15, player.experienceProgress);
+                    ondisconnectstatement.setString(11, player.getInventory().offHand.get(0).isEmpty() ? "" : ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString());
+                    EnderChestInventory end = player.getEnderChestInventory();
+                    StringBuilder endresults = new StringBuilder();
+                    for (int i = 0; i < end.size(); i++) {
+                        if (end.getStack(i).isEmpty()) continue;
+                        endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+                    }
+                    ondisconnectstatement.setString(5, endresults.toString());
+                    DefaultedList<ItemStack> main = player.getInventory().main;
+                    StringBuilder mainresults = new StringBuilder();
+                    for (int i = 0; i < main.size(); i++) {
+                        if (main.get(i).isEmpty()) continue;
+                        mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+                    }
+                    ondisconnectstatement.setString(10, mainresults.toString());
+                    DefaultedList<ItemStack> armor = player.getInventory().armor;
+                    StringBuilder armorresults = new StringBuilder();
+                    for (int i = 0; i < armor.size(); i++) {
+                        if (armor.get(i).isEmpty()) continue;
+                        armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
+                    }
+                    ondisconnectstatement.setString(12, armorresults.toString());
+                    StringBuilder effectresults = new StringBuilder();
+                    player.getStatusEffects().forEach(effect -> effectresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
+                    ondisconnectstatement.setString(16, effectresults.toString());
                     ondisconnectstatement.executeUpdate();
                     player.getInventory().clear();
                     player.getEnderChestInventory().clear();
                     player.clearStatusEffects();
                     ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
-                    LOGGER.info("success to save " + player.getName().getString() + "'s data");
-                    return;
+                    LOGGER.info("success to save {}'s data", player.getName().getString());
+                    break;
                 } catch (CommunicationsException ignored) {
                 } catch (Exception e) {
-                    LOGGER.error("FAIL TO SAVE " + player.getName().getString() + "'s DATA:");
+                    LOGGER.error("FAIL TO SAVE {}'s DATA:", player.getName().getString());
                     e.printStackTrace();
                     return;
                 }
