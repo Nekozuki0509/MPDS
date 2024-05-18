@@ -228,15 +228,15 @@ public class MPDS implements ModInitializer {
         new Thread(() -> {
             ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
             broken.add(player.getUuid());
-            player.sendMessage(Text.translatable("loading " + player.getName().getString() + "'s data...").formatted(Formatting.YELLOW));
+            if (!Boolean.parseBoolean(config.get("DJM"))) player.sendMessage(Text.translatable("loading " + player.getName().getString() + "'s data...").formatted(Formatting.YELLOW));
             LOGGER.info("loading {}'s data...", player.getName().getString());
             while (true) {
                 try {
                     checkskip.setString(1, player.getName().getString());
                     ResultSet checkskiprs = checkskip.executeQuery();
                     if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
-                        minecraftServer.getPlayerManager().broadcast(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
-                        player.sendMessage(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW));
+                        if (!Boolean.parseBoolean(config.get("DSM"))) minecraftServer.getPlayerManager().broadcast(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
+                        if (!Boolean.parseBoolean(config.get("DSM"))) player.sendMessage(Text.translatable("skip loading because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW));
                         LOGGER.warn("skip loading because {}'s data includes skip list", player.getName().getString());
                         broken.remove(player.getUuid());
                         player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_GLASS_BREAK), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
@@ -249,16 +249,14 @@ public class MPDS implements ModInitializer {
                         for (int i = 0; "false".equals(resultSet.getString("sync")); i++) {
                             if (i == 10) {
                                 if (config.get("SERVER").equals(resultSet.getString("server")) || "*".equals(resultSet.getString("server"))) {
-                                    player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
+                                    if (!Boolean.parseBoolean(config.get("DJM"))) player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
                                     LOGGER.info("saved {}'s correct data", player.getName().getString());
                                     broken.remove(player.getUuid());
                                     player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.ENTITY_PLAYER_LEVELUP), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                                     return;
                                 }
-                                player.sendMessage(Text.translatable("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!").formatted(Formatting.RED));
-                                player.sendMessage(Text.translatable("PLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED));
-                                LOGGER.error("IT LOOKS {}'s DATA WAS BROKEN!", player.getName().getString());
-                                LOGGER.error("PLEASE CONNECT TO {}!", resultSet.getString("server"));
+                                if (!Boolean.parseBoolean(config.get("DEM"))) player.sendMessage(Text.translatable("IT LOOKS " + player.getName().getString() + "'s DATA WAS BROKEN!\nPLEASE CONNECT TO " + resultSet.getString("server") + "!").formatted(Formatting.RED));
+                                LOGGER.error("IT LOOKS {}'s DATA WAS BROKEN!\nPLEASE CONNECT TO {}!", player.getName().getString(), resultSet.getString("server"));
                                 player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_ANVIL_DESTROY), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                                 return;
                             }
@@ -296,7 +294,7 @@ public class MPDS implements ModInitializer {
                             });
                         if (!"".equals(resultSet.getString("effects")))
                             List.of(resultSet.getString("effects").split("&")).forEach(compound -> player.addStatusEffect(StatusEffectInstance.fromNbt(NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compound)).resultOrPartial(LOGGER::error).orElseThrow())));
-                        player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
+                        if (!Boolean.parseBoolean(config.get("DJM"))) player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
                         LOGGER.info("success to load {}'s data!", player.getName().getString());
                         player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.ENTITY_PLAYER_LEVELUP), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                         setserver.setString(1, config.get("SERVER"));
@@ -307,10 +305,8 @@ public class MPDS implements ModInitializer {
                         Thread.sleep(1000);
                         for (int i = 1; !onjoinstatement.executeQuery().next(); i++) {
                             if (i == 10) {
-                                player.sendMessage(Text.translatable("COULD NOT FIND " + player.getName().getString() + "'s DATA!").formatted(Formatting.RED));
-                                player.sendMessage(Text.translatable("MADE NEW ONE!").formatted(Formatting.RED));
-                                LOGGER.warn("COULD NOT FIND {}'s DATA!", player.getName().getString());
-                                LOGGER.warn("MADE NEW ONE!");
+                                if (!Boolean.parseBoolean(config.get("DEM"))) player.sendMessage(Text.translatable("COULD NOT FIND " + player.getName().getString() + "'s DATA!\nMADE NEW ONE!").formatted(Formatting.RED));
+                                LOGGER.warn("COULD NOT FIND {}'s DATA!\nMADE NEW ONE!", player.getName().getString());
                                 player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_GLASS_BREAK), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                                 broken.remove(player.getUuid());
                                 return;
@@ -324,7 +320,7 @@ public class MPDS implements ModInitializer {
                     player.getInventory().clear();
                     player.getEnderChestInventory().clear();
                     player.clearStatusEffects();
-                    player.sendMessage(Text.translatable("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA : \n" + e.getMessage()).formatted(Formatting.RED));
+                    if (!Boolean.parseBoolean(config.get("DEM"))) player.sendMessage(Text.translatable("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA : \n" + e.getMessage()).formatted(Formatting.RED));
                     player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.BLOCK_ANVIL_DESTROY), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
                     LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA:");
                     e.printStackTrace();
@@ -344,7 +340,7 @@ public class MPDS implements ModInitializer {
                     checkskip.setString(1, player.getName().getString());
                     ResultSet checkskiprs = checkskip.executeQuery();
                     if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
-                        minecraftServer.getPlayerManager().broadcast(Text.translatable("skip saving because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
+                        if (!Boolean.parseBoolean(config.get("DSM"))) minecraftServer.getPlayerManager().broadcast(Text.translatable("skip saving because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), false);
                         LOGGER.warn("skip saving because {}'s data includes skip list", player.getName().getString());
                         player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
                         bea.setString(1, player.getUuidAsString());

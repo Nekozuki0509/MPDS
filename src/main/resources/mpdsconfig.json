@@ -10,5 +10,11 @@
   "_Pcomment_" : "it's mysql user's password",
   "PASSWD" : "bar",
   "_Scomment_" : "it's this server name",
-  "SERVER" : "s"
+  "SERVER" : "s",
+  "_DJMcomment_" : "disable join message",
+  "DJM" : "false",
+  "_DSMcomment_" : "disable skip message",
+  "DSM" : "false",
+  "_DEMcomment_" : "disable error message",
+  "DEM" : "false"
 }
