@@ -18,7 +18,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -293,7 +292,7 @@ public class MPDS implements ModInitializer {
                                 player.getInventory().armor.set(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
                             });
                         if (!"".equals(resultSet.getString("effects")))
-                            List.of(resultSet.getString("effects").split("&")).forEach(compound -> player.addStatusEffect(StatusEffectInstance.fromNbt(NbtCompound.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compound)).resultOrPartial(LOGGER::error).orElseThrow())));
+                            List.of(resultSet.getString("effects").split("&")).forEach(compound -> player.addStatusEffect(StatusEffectInstance.CODEC.parse(JsonOps.INSTANCE, JsonParser.parseString(compound)).resultOrPartial(LOGGER::error).orElseThrow()));
                         if (!Boolean.parseBoolean(config.get("DJM"))) player.sendMessage(Text.translatable("success to load " + player.getName().getString() + "'s data!").formatted(Formatting.AQUA));
                         LOGGER.info("success to load {}'s data!", player.getName().getString());
                         player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(SoundEvents.ENTITY_PLAYER_LEVELUP), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
@@ -394,7 +393,7 @@ public class MPDS implements ModInitializer {
                     }
                     ondisconnectstatement.setString(12, armorresults.toString());
                     StringBuilder effectresults = new StringBuilder();
-                    player.getStatusEffects().forEach(effect -> effectresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
+                    player.getStatusEffects().forEach(effect -> effectresults.append(StatusEffectInstance.CODEC.encodeStart(JsonOps.INSTANCE, effect).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
                     ondisconnectstatement.setString(16, effectresults.toString());
                     ondisconnectstatement.executeUpdate();
                     player.getInventory().clear();
