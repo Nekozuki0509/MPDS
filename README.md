@@ -1,9 +1,13 @@
+[![Modrinth Version](https://img.shields.io/modrinth/v/yJXF9ZSx?logo=modrinth&color=1bd768)![Modrinth Downloads](https://img.shields.io/modrinth/dt/yJXF9ZSx?logo=modrinth&color=1bd768)![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/yJXF9ZSx?logo=modrinth&color=1bd768)](https://modrinth.com/mod/mpds)
+[![Discord](https://img.shields.io/discord/1241236305741090836?logo=discord&color=5765f2)](https://discord.gg/352Cdy8MjV)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Flit.link%2Fadmin%2Fcreator&up_message=Nekozuki0509&label=litlink&color=9594f9)](https://lit.link/nekozuki0509)
+
 # Minecraft Player Data Sync(MPDS)
 ## Description
 it's a fabric mod to sync player data between fabric servers. this needs only server side. this mod can sync player's air, health, enderChest, exhaustion, foodLevel, saturationLevel, foodTickTimer, inventory, offhand, armor, selectedSlot, experienceLevel, and experienceProgress. 
 ## TODO
 > [!CAUTION]
-> - **you need to build mysql server.**
+> - **you need to build mysql server with 8.0.36 or higher.**
 > - **you need to link fabric servers with proxy server!(like velocity, bungeecord, etc...)**
 1. add this mod to server mods folder.
 1. restart server.
