@@ -36,4 +36,3 @@ it's a fabric mod to sync player data between fabric servers. this needs only se
   "DEM" : "false"
 }
 ```
-## Released on [modrinth](https://modrinth.com/mod/mpds/)
