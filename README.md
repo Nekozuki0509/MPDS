@@ -37,4 +37,7 @@ it's a fabric mod to sync player data between fabric servers. this needs only se
 }
 ```
 
+## sources
+Sources are in another branch.
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U213BUNP)
