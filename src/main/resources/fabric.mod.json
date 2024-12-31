@@ -20,15 +20,11 @@
 		]
 	},
 	"mixins": [
-		"mpds.mixins.json",
-		{
-			"config": "mpds.client.mixins.json",
-			"environment": "client"
-		}
+		"mpds.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.3",
-		"minecraft": "~1.18.2",
+		"minecraft": "~1.18.x",
 		"java": ">=17",
 		"fabric-api": "*"
 	},
