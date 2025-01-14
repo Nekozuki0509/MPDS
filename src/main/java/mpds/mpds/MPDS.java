@@ -96,6 +96,14 @@ public class MPDS implements ModInitializer {
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve("MPDS");
         Path configjson = configDir.resolve("Config.json");
 
+        if (Files.notExists(configDir)) {
+            try {
+                Files.createDirectory(configDir);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
         if (Files.notExists(configjson)) {
             try {
