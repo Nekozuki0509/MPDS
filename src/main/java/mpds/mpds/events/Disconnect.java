@@ -59,66 +59,50 @@ public class Disconnect {
 
                     ondisconnectstatement.setString(1, player.getName().getString());
                     ondisconnectstatement.setString(2, player.getUuidAsString());
+                    ondisconnectstatement.setInt(3, player.getAir());
+                    ondisconnectstatement.setFloat(4, player.getHealth());
+                    ondisconnectstatement.setFloat(6, player.getHungerManager().getExhaustion());
+                    ondisconnectstatement.setInt(7, player.getHungerManager().getFoodLevel());
+                    ondisconnectstatement.setFloat(8, player.getHungerManager().getSaturationLevel());
+                    ondisconnectstatement.setInt(9, ((HungerManagerAccessor) player.getHungerManager()).getFoodTickTimer());
+                    ondisconnectstatement.setInt(14, player.experienceLevel);
+                    ondisconnectstatement.setFloat(15, player.experienceProgress);
 
-                    if (SA) ondisconnectstatement.setInt(3, player.getAir());
-
-                    if (SH) ondisconnectstatement.setFloat(4, player.getHealth());
-
-                    if (SF) {
-                        ondisconnectstatement.setFloat(6, player.getHungerManager().getExhaustion());
-                        ondisconnectstatement.setInt(7, player.getHungerManager().getFoodLevel());
-                        ondisconnectstatement.setFloat(8, player.getHungerManager().getSaturationLevel());
-                        ondisconnectstatement.setInt(9, ((HungerManagerAccessor) player.getHungerManager()).getFoodTickTimer());
+                    EnderChestInventory end = player.getEnderChestInventory();
+                    StringBuilder endresults = new StringBuilder();
+                    for (int i = 0; i < end.size(); i++) {
+                        if (end.getStack(i).isEmpty()) continue;
+                        endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
                     }
+                    ondisconnectstatement.setString(5, endresults.toString());
+                    if (SEn) player.getEnderChestInventory().clear();
 
-                    if (SL) {
-                        ondisconnectstatement.setInt(14, player.experienceLevel);
-                        ondisconnectstatement.setFloat(15, player.experienceProgress);
+                    ondisconnectstatement.setString(11, player.getInventory().offHand.get(0).isEmpty() ? "" : ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString());
+                    ondisconnectstatement.setInt(13, player.getInventory().selectedSlot);
+
+                    DefaultedList<ItemStack> main = player.getInventory().main;
+                    StringBuilder mainresults = new StringBuilder();
+                    for (int i = 0; i < main.size(); i++) {
+                        if (main.get(i).isEmpty()) continue;
+                        mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
                     }
+                    ondisconnectstatement.setString(10, mainresults.toString());
 
-                    if (SEn) {
-                        EnderChestInventory end = player.getEnderChestInventory();
-                        StringBuilder endresults = new StringBuilder();
-                        for (int i = 0; i < end.size(); i++) {
-                            if (end.getStack(i).isEmpty()) continue;
-                            endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                        }
-                        ondisconnectstatement.setString(5, endresults.toString());
-
-                        player.getEnderChestInventory().clear();
+                    DefaultedList<ItemStack> armor = player.getInventory().armor;
+                    StringBuilder armorresults = new StringBuilder();
+                    for (int i = 0; i < armor.size(); i++) {
+                        if (armor.get(i).isEmpty()) continue;
+                        armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
                     }
+                    ondisconnectstatement.setString(12, armorresults.toString());
+                    if (SI) player.getInventory().clear();
 
-                    if (SI) {
-                        ondisconnectstatement.setString(11, player.getInventory().offHand.get(0).isEmpty() ? "" : ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString());
-                        ondisconnectstatement.setInt(13, player.getInventory().selectedSlot);
+                    StringBuilder effectresults = new StringBuilder();
+                    player.getStatusEffects().forEach(effect -> effectresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));;
+                    ondisconnectstatement.setString(16, effectresults.toString());
+                    if (SEf) player.clearStatusEffects();
 
-                        DefaultedList<ItemStack> main = player.getInventory().main;
-                        StringBuilder mainresults = new StringBuilder();
-                        for (int i = 0; i < main.size(); i++) {
-                            if (main.get(i).isEmpty()) continue;
-                            mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                        }
-                        ondisconnectstatement.setString(10, mainresults.toString());
-
-                        DefaultedList<ItemStack> armor = player.getInventory().armor;
-                        StringBuilder armorresults = new StringBuilder();
-                        for (int i = 0; i < armor.size(); i++) {
-                            if (armor.get(i).isEmpty()) continue;
-                            armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                        }
-                        ondisconnectstatement.setString(12, armorresults.toString());
-
-                        player.getInventory().clear();
-                    }
-
-                    if (SEf) {
-                        StringBuilder effectresults = new StringBuilder();
-                        player.getStatusEffects().forEach(effect -> effectresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
-                        ondisconnectstatement.setString(16, effectresults.toString());
-                        ondisconnectstatement.executeUpdate();
-
-                        player.clearStatusEffects();
-                    }
+                    ondisconnectstatement.executeUpdate();
 
                     ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
                     LOGGER.info("success to save {}'s data", player.getName().getString());

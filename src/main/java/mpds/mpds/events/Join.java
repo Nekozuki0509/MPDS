@@ -58,7 +58,7 @@ public class Join {
                     ResultSet resultSet;
                     if ((resultSet = onjoinstatement.executeQuery()).next()) {
                         for (int i = 0; "false".equals(resultSet.getString("sync")); i++) {
-                            if (i == 10) {
+                            if (i == 3) {
                                 if (ServerName.equals(resultSet.getString("server")) || "*".equals(resultSet.getString("server"))) {
                                     if (AJM)
                                         player.sendMessage(Text.translatable("saved " + player.getName().getString() + "'s correct data").formatted(Formatting.AQUA));
