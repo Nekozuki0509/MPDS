@@ -11,13 +11,18 @@ import mpds.mpds.events.Disconnect;
 import mpds.mpds.events.Join;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.random.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +30,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 import static net.minecraft.server.command.CommandManager.argument;
@@ -34,10 +40,6 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class MPDS implements ModInitializer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("mpds");
-
-    static Connection connection = null;
-
-    static String TABLE_NAME;
 
     public static String ServerName;
 
@@ -69,30 +71,8 @@ public class MPDS implements ModInitializer {
 
     public static RegistryOps<JsonElement> wrappedOps;
 
-    public static PreparedStatement onjoinstatement;
-
-    public static PreparedStatement checkskip;
-
-    public static PreparedStatement showskip;
-
-    public static PreparedStatement updateskip;
-
-    public static PreparedStatement bea;
-
-    public static PreparedStatement befalse;
-
-    public static PreparedStatement setserver;
-
-    public static PreparedStatement ondisconnectstatement;
-
     @Override
     public void onInitialize() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve("MPDS");
         Path configjson = configDir.resolve("Config.json");
 
@@ -126,7 +106,7 @@ public class MPDS implements ModInitializer {
         ASM = Boolean.parseBoolean(config.get("ASM"));
         AEM = Boolean.parseBoolean(config.get("AEM"));
 
-        TABLE_NAME = config.get("TABLE_NAME");
+        sql.TABLE_NAME = config.get("TABLE_NAME");
 
         ServerName = config.get("ServerName");
 
@@ -139,71 +119,7 @@ public class MPDS implements ModInitializer {
         SEf = Boolean.parseBoolean(config.get("SEf"));
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://" + config.get("HOST") + "/" + config.get("DB_NAME") + "?autoReconnect=true", config.get("USER"), config.get("PASSWD"));
-
-            onjoinstatement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE uuid = ?");
-
-            checkskip = connection.prepareStatement("SELECT skip FROM skipplayer WHERE Name = ?");
-
-            showskip = connection.prepareStatement("SELECT * FROM skipplayer");
-
-            updateskip = connection.prepareStatement("INSERT INTO skipplayer (Name, skip) VALUES (?, ?) AS new ON DUPLICATE KEY UPDATE Name=new.Name, skip=new.skip");
-
-            bea = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET server=\"*\" WHERE uuid = ?");
-
-            befalse = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET sync=\"false\" WHERE uuid = ?");
-
-            setserver = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET server=? WHERE uuid = ?");
-
-            ondisconnectstatement = connection.prepareStatement("INSERT INTO " + TABLE_NAME +
-                    " (Name, uuid, Air, Health, enderChestInventory, exhaustion, foodLevel, saturationLevel, foodTickTimer, main, off, armor, selectedSlot, experienceLevel, experienceProgress, effects, sync) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, \"true\") AS new " +
-                    "ON DUPLICATE KEY UPDATE " +
-                    "Air=new.Air," +
-                    "Health=new.Health," +
-                    "enderChestInventory=new.enderChestInventory," +
-                    "exhaustion=new.exhaustion," +
-                    "foodLevel=new.foodLevel," +
-                    "saturationLevel=new.saturationLevel," +
-                    "foodTickTimer=new.foodTickTimer," +
-                    "main=new.main," +
-                    "off=new.off," +
-                    "armor=new.armor," +
-                    "selectedSlot=new.selectedSlot," +
-                    "experienceLevel=new.experienceLevel," +
-                    "experienceProgress=new.experienceProgress," +
-                    "effects=new.effects," +
-                    "sync=new.sync");
-
-            connection.prepareStatement
-                    ("CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "(" +
-                            "id int AUTO_INCREMENT PRIMARY KEY," +
-                            "Name char(16)," +
-                            "uuid char(36) UNIQUE," +
-                            "Air int," +
-                            "Health float," +
-                            "enderChestInventory longtext," +
-                            "exhaustion float," +
-                            "foodLevel int," +
-                            "saturationLevel float," +
-                            "foodTickTimer int," +
-                            "main longtext," +
-                            "off longtext," +
-                            "armor longtext," +
-                            "selectedSlot int," +
-                            "experienceLevel int," +
-                            "experienceProgress int," +
-                            "effects longtext," +
-                            "sync char(5)," +
-                            "server text" +
-                            ")").executeUpdate();
-
-            connection.prepareStatement
-                    ("CREATE TABLE IF NOT EXISTS skipplayer(" +
-                            "id int auto_increment PRIMARY KEY," +
-                            "Name char(16) UNIQUE," +
-                            "skip char(5)" +
-                            ")").executeUpdate();
+            sql.init();
         } catch (SQLException e) {
             LOGGER.error("FAIL TO CONNECT MYSQL");
             LOGGER.error("DID YOU CHANGE MPDS CONFIG?");
@@ -218,10 +134,7 @@ public class MPDS implements ModInitializer {
                         .executes(ctx -> {
                             while (true) {
                                 try {
-                                    updateskip.setString(1, StringArgumentType.getString(ctx, "player"));
-                                    updateskip.setString(2, String.valueOf(BoolArgumentType.getBool(ctx, "skip")));
-                                    updateskip.executeUpdate();
-
+                                    sql.updateSkip(StringArgumentType.getString(ctx, "player"), String.valueOf(BoolArgumentType.getBool(ctx, "skip")));
                                     ctx.getSource().getServer().getPlayerManager().broadcast(Text.translatable("set " + StringArgumentType.getString(ctx, "player") + "'s data " + BoolArgumentType.getBool(ctx, "skip")).formatted(Formatting.YELLOW), false);
 
                                     return 1;
@@ -245,7 +158,7 @@ public class MPDS implements ModInitializer {
 
                             while (true) {
                                 try {
-                                    skiprs = showskip.executeQuery();
+                                    skiprs = sql.showSkip();
 
                                     while (skiprs.next()) {
                                         if ("false".equals(skiprs.getString("skip"))) continue;
@@ -272,16 +185,20 @@ public class MPDS implements ModInitializer {
                         })
                 ));
 
-        ServerTickEvents.START_SERVER_TICK.register(server -> wrappedOps = server.getRegistryManager().getOps(JsonOps.INSTANCE));
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> wrappedOps = server.getRegistryManager().getOps(JsonOps.INSTANCE));
 
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             try {
-                connection.close();
+                sql.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
 
         LOGGER.info("MPDS loaded");
+    }
+
+    public static void playSound(ServerPlayerEntity player, SoundEvent event) {
+        player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(event), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
     }
 }
