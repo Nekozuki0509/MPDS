@@ -1,28 +1,19 @@
 package mpds.mpds.events;
 
-import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
-import mpds.mpds.mixin.HungerManagerAccessor;
 import mpds.mpds.sql;
 import mpds.mpds.sqlPlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.MessageType;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 
 import java.sql.ResultSet;
-import java.util.List;
 
 import static mpds.mpds.MPDS.*;
 import static net.minecraft.sound.SoundEvents.*;
