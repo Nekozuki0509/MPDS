@@ -4,6 +4,8 @@ import com.mojang.serialization.JsonOps;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.HungerManagerAccessor;
 import mpds.mpds.mixin.PlayerManagerInvoker;
+import mpds.mpds.sql;
+import mpds.mpds.sqlPlayer;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -21,34 +23,33 @@ import net.minecraft.util.collection.DefaultedList;
 import java.sql.ResultSet;
 
 import static mpds.mpds.MPDS.*;
+import static net.minecraft.sound.SoundEvents.BLOCK_GLASS_BREAK;
 
 public class Disconnect {
+
     public static void ondisconnect(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
         new Thread(() -> {
             ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
-            LOGGER.info("saving {}'s data...", player.getName().getString());
+            String playerN = player.getName().getString();
+            LOGGER.info("saving {}'s data...", playerN);
 
             while (true) {
                 try {
-                    checkskip.setString(1, player.getName().getString());
-                    ResultSet checkskiprs = checkskip.executeQuery();
+                    ResultSet checkskiprs = sql.checkSkip(playerN);
 
                     if (checkskiprs.next() && "true".equals(checkskiprs.getString("skip"))) {
                         if (ASM)
-                            minecraftServer.getPlayerManager().broadcast(new TranslatableText("skip saving because " + player.getName().getString() + "'s data includes skip list").formatted(Formatting.YELLOW), MessageType.SYSTEM, Util.NIL_UUID);
-                        LOGGER.warn("skip saving because {}'s data includes skip list", player.getName().getString());
+                            minecraftServer.getPlayerManager().broadcast(new TranslatableText("skip saving because " + playerN + "'s data includes skip list").formatted(Formatting.YELLOW), MessageType.SYSTEM, Util.NIL_UUID);
+                        LOGGER.warn("skip saving because {}'s data includes skip list", playerN);
 
-                        player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
-                        bea.setString(1, player.getUuidAsString());
-                        bea.executeUpdate();
-                        befalse.setString(1, player.getUuid().toString());
-                        befalse.executeUpdate();
+                        player.getWorld().playSound(null, player.getBlockPos(), BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
+                        sql.beA(player.getUuidAsString());
 
                         return;
                     }
 
                     if (broken.stream().anyMatch(bplayer -> bplayer.equals(player.getUuid()))) {
-                        LOGGER.warn("skip saving because {}'s data was broken", player.getName().getString());
+                        LOGGER.warn("skip saving because {}'s data was broken", playerN);
                         broken.remove(player.getUuid());
 
                         player.getInventory().clear();
@@ -59,60 +60,15 @@ public class Disconnect {
                         return;
                     }
 
-                    ondisconnectstatement.setString(1, player.getName().getString());
-                    ondisconnectstatement.setString(2, player.getUuidAsString());
-                    ondisconnectstatement.setInt(3, player.getAir());
-                    ondisconnectstatement.setFloat(4, player.getHealth());
-                    ondisconnectstatement.setFloat(6, player.getHungerManager().getExhaustion());
-                    ondisconnectstatement.setInt(7, player.getHungerManager().getFoodLevel());
-                    ondisconnectstatement.setFloat(8, player.getHungerManager().getSaturationLevel());
-                    ondisconnectstatement.setInt(9, ((HungerManagerAccessor) player.getHungerManager()).getFoodTickTimer());
-                    ondisconnectstatement.setInt(14, player.experienceLevel);
-                    ondisconnectstatement.setFloat(15, player.experienceProgress);
-
-                    EnderChestInventory end = player.getEnderChestInventory();
-                    StringBuilder endresults = new StringBuilder();
-                    for (int i = 0; i < end.size(); i++) {
-                        if (end.getStack(i).isEmpty()) continue;
-                        endresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                    }
-                    ondisconnectstatement.setString(5, endresults.toString());
-                    if (SEn) player.getEnderChestInventory().clear();
-
-                    ondisconnectstatement.setString(11, player.getInventory().offHand.get(0).isEmpty() ? "" : ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString());
-                    ondisconnectstatement.setInt(13, player.getInventory().selectedSlot);
-
-                    DefaultedList<ItemStack> main = player.getInventory().main;
-                    StringBuilder mainresults = new StringBuilder();
-                    for (int i = 0; i < main.size(); i++) {
-                        if (main.get(i).isEmpty()) continue;
-                        mainresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, main.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                    }
-                    ondisconnectstatement.setString(10, mainresults.toString());
-
-                    DefaultedList<ItemStack> armor = player.getInventory().armor;
-                    StringBuilder armorresults = new StringBuilder();
-                    for (int i = 0; i < armor.size(); i++) {
-                        if (armor.get(i).isEmpty()) continue;
-                        armorresults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, armor.get(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
-                    }
-                    ondisconnectstatement.setString(12, armorresults.toString());
-                    if (SI) player.getInventory().clear();
-
-                    StringBuilder effectresults = new StringBuilder();
-                    player.getStatusEffects().forEach(effect -> effectresults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));;
-                    ondisconnectstatement.setString(16, effectresults.toString());
-                    if (SEf) player.clearStatusEffects();
-
-                    ondisconnectstatement.executeUpdate();
+                    sql.disconnect(new sqlPlayer(player));
 
                     ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
-                    LOGGER.info("success to save {}'s data", player.getName().getString());
+                    LOGGER.info("success to save {}'s data", playerN);
 
                     return;
                 } catch (CommunicationsException ignored) {
                 } catch (Exception e) {
-                    LOGGER.error("FAIL TO SAVE {}'s DATA:", player.getName().getString());
+                    LOGGER.error("FAIL TO SAVE {}'s DATA:", playerN);
                     e.printStackTrace();
 
                     return;
