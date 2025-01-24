@@ -5,6 +5,7 @@ import com.mojang.serialization.JsonOps;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.HungerManagerAccessor;
 import mpds.mpds.sql;
+import mpds.mpds.sqlPlayer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
