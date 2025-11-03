@@ -1,6 +1,6 @@
 {
   "_Hcomment_": "it's mysql host ip",
-  "HOST": "127.0.0.1:3306",
+  "HOST": "127.0.0.1",
   "_Dcomment_": "it's mysql database name **YOU MUST CREATE THIS DB!!**",
   "DB_NAME": "minecraft",
   "_Tcomment_": "it's mysql table name(auto create)",
@@ -18,11 +18,11 @@
   "_AEMcomment_": "allow error message",
   "AEM": "true",
   "_SAcomment_": "sync air",
-  "SA": "true",
+  "SA": "false",
   "_SHcomment_": "sync health",
-  "SH": "true",
+  "SH": "false",
   "_SFcomment_": "sync food",
-  "SF": "true",
+  "SF": "false",
   "_SLcomment_": "sync level",
   "SL": "true",
   "_SEncomment_": "sync EnderChest",
@@ -30,5 +30,5 @@
   "_SIcomment_": "sync inventory",
   "SI": "true",
   "_SEfcomment_": "sync effect",
-  "SEf": "true"
+  "SEf": "false"
 }

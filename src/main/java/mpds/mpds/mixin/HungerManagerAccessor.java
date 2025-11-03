@@ -12,4 +12,10 @@ public interface HungerManagerAccessor {
 
     @Accessor
     int getFoodTickTimer();
+
+    @Accessor("exhaustion")
+    void setExhaustion(float exhaustion);
+
+    @Accessor("exhaustion")
+    float getExhaustion();
 }
