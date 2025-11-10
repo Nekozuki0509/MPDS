@@ -195,6 +195,89 @@ public class MPDS implements ModInitializer {
             }
         });
 
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                dispatcher.register(literal("mpds")
+                        .requires(source -> source.hasPermissionLevel(4))
+                        .then(literal("saveall")
+                                .executes(context -> {
+                                    final var server = context.getSource().getServer();
+                                    final var playersToSave = new ArrayList<>(server.getPlayerManager().getPlayerList());
+                                    context.getSource().sendFeedback(() -> Text.of("Snapshotting data for " + playersToSave.size() + " players..."), false);
+
+                                    new Thread(() -> {
+                                        List<sqlPlayer> playerDTOs = new ArrayList<>();
+                                        for (ServerPlayerEntity player : playersToSave) {
+                                            try {
+                                                // Read data without clearing inventory
+                                                playerDTOs.add(new sqlPlayer(player, false));
+                                            } catch (Exception e) {
+                                                LOGGER.error("Failed to serialize data for player {}:", player.getName().getString(), e);
+                                            }
+                                        }
+
+                                        int successCount = 0;
+                                        int errorCount = 0;
+                                        for (sqlPlayer playerData : playerDTOs) {
+                                            try {
+                                                sql.disconnect(playerData);
+                                                successCount++;
+                                            } catch (Exception e) {
+                                                errorCount++;
+                                                LOGGER.error("Failed to save data to database for player {}:", playerData.name, e);
+                                            }
+                                        }
+
+                                        final String message = String.format("MPDS: Snapshot data for %d online players. (%d errors)", successCount, errorCount);
+                                        server.execute(() -> {
+                                            context.getSource().sendFeedback(() -> Text.of(message), true);
+                                            LOGGER.info(message);
+                                        });
+                                    }).start();
+                                    return 1;
+                                })
+                        )
+                        .then(literal("save")
+                                .then(argument("player", StringArgumentType.word())
+                                        .executes(context -> {
+                                            final var server = context.getSource().getServer();
+                                            String playerName = StringArgumentType.getString(context, "player");
+                                            ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerName);
+                                            if (player == null) {
+                                                context.getSource().sendError(Text.of("Player not found: " + playerName));
+                                                return 0;
+                                            }
+                                            context.getSource().sendFeedback(() -> Text.of("Snapshotting data for player " + playerName + "..."), false);
+
+                                            new Thread(() -> {
+                                                sqlPlayer playerData;
+                                                try {
+                                                    // Read data without clearing inventory
+                                                    playerData = new sqlPlayer(player, false);
+                                                } catch (Exception e) {
+                                                    LOGGER.error("Failed to serialize data for player {}:", player.getName().getString(), e);
+                                                    server.execute(() -> context.getSource().sendError(Text.of("Error serializing data for " + playerName)));
+                                                    return;
+                                                }
+
+                                                try {
+                                                    sql.disconnect(playerData);
+                                                    final String message = "MPDS: Successfully snapshotted data for player " + playerName;
+                                                    server.execute(() -> {
+                                                        context.getSource().sendFeedback(() -> Text.of(message), true);
+                                                        LOGGER.info(message);
+                                                    });
+                                                } catch (Exception e) {
+                                                    server.execute(() -> context.getSource().sendError(Text.of("Failed to save data to database for player " + playerName)));
+                                                    LOGGER.error("Failed to save data to database for player {}:", playerName, e);
+                                                }
+                                            }).start();
+                                            return 1;
+                                        })
+                                )
+                        )
+                )
+        );
+
         LOGGER.info("MPDS loaded");
     }
 

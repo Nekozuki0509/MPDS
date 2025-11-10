@@ -1,15 +1,12 @@
 package mpds.mpds;
 
 import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import mpds.mpds.mixin.HungerManagerAccessor;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.collection.DefaultedList;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -108,7 +105,7 @@ public class sqlPlayer {
 
     }
 
-    public sqlPlayer(ServerPlayerEntity player) {
+    public sqlPlayer(ServerPlayerEntity player, boolean clearData) {
         this.name = player.getName().getString();
         this.uuid = player.getUuidAsString();
         this.air = player.getAir();
@@ -127,13 +124,13 @@ public class sqlPlayer {
             endresults.append(ItemStack.CODEC.encodeStart(wrappedOps, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
         }
         this.enderChestInventory = endresults.toString();
-        if (SEn) player.getEnderChestInventory().clear();
+        if (clearData && SEn) player.getEnderChestInventory().clear();
 
         this.off = player.getStackInHand(net.minecraft.util.Hand.OFF_HAND).isEmpty() ? "" : ItemStack.CODEC.encodeStart(wrappedOps, player.getStackInHand(net.minecraft.util.Hand.OFF_HAND)).resultOrPartial(LOGGER::error).orElseThrow().toString();
         this.selectedSlot = player.getInventory().getSelectedSlot();
 
-        DefaultedList<ItemStack> main = null; // unused; iterate via set/getStack indices 0-35
-        StringBuilder mainresults = new StringBuilder();
+	    // unused; iterate via set/getStack indices 0-35
+	    StringBuilder mainresults = new StringBuilder();
         for (int i = 0; i < 36; i++) {
             ItemStack st = player.getInventory().getStack(i);
             if (st.isEmpty()) continue;
@@ -141,8 +138,8 @@ public class sqlPlayer {
         }
         this.main = mainresults.toString();
 
-        DefaultedList<ItemStack> armor = null; // unused; access via get/setArmorStack
-        StringBuilder armorresults = new StringBuilder();
+	    // unused; access via get/setArmorStack
+	    StringBuilder armorresults = new StringBuilder();
         for (int i = 0; i < 4; i++) {
             net.minecraft.entity.EquipmentSlot slot = switch (i) {
                 case 0 -> net.minecraft.entity.EquipmentSlot.FEET;
@@ -157,11 +154,11 @@ public class sqlPlayer {
         }
         this.armor = armorresults.toString();
 
-        if (SI) player.getInventory().clear();
+        if (clearData && SI) player.getInventory().clear();
 
         StringBuilder effectresults = new StringBuilder();
         player.getStatusEffects().forEach(effect -> effectresults.append(StatusEffectInstance.CODEC.encodeStart(wrappedOps, effect).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
         this.effects = effectresults.toString();
-        if (SEf) player.clearStatusEffects();
+        if (clearData && SEf) player.clearStatusEffects();
     }
 }

@@ -3,11 +3,9 @@ package mpds.mpds.events;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.PlayerManagerInvoker;
 import mpds.mpds.sql;
-import mpds.mpds.sqlPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -51,7 +49,7 @@ public class Disconnect {
                         return;
                     }
 
-                    sql.disconnect(new sqlPlayer(player));
+                    sql.savePlayerData(player, true);
 
                     ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
                     LOGGER.info("success to save {}'s data", playerN);
