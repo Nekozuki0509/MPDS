@@ -23,6 +23,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.random.Random;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -197,7 +198,7 @@ public class MPDS implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(literal("mpds")
-                        .requires(source -> source.hasPermissionLevel(4))
+                        .requires(source -> Permissions.check(source, "mpds.admin", 4))
                         .then(literal("saveall")
                                 .executes(context -> {
                                     final var server = context.getSource().getServer();
