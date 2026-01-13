@@ -66,9 +66,15 @@ public class sqlPlayer {
         }
 
         if (SEn && !"".equals(resultSet.getString("enderChestInventory")))
-            List.of(resultSet.getString("enderChestInventory").split("&")).forEach(compound -> {
-                String[] compounds = compound.split("~");
-                player.getEnderChestInventory().setStack(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(wrappedOps, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
+            List.of(resultSet.getString("enderChestInventory").split("(?<=~\\d{1,5})&")).forEach(compound -> {
+                int lastTilde = compound.lastIndexOf("~");
+                if (lastTilde == -1) {
+                    LOGGER.error("Malformed enderChestInventory data: {}", compound);
+                    return;
+                }
+                String json = compound.substring(0, lastTilde);
+                int index = Integer.parseInt(compound.substring(lastTilde + 1));
+                player.getEnderChestInventory().setStack(index, ItemStack.CODEC.parse(wrappedOps, JsonParser.parseString(json)).resultOrPartial(LOGGER::error).orElseThrow());
             });
 
         if (SI) {
@@ -77,15 +83,26 @@ public class sqlPlayer {
             player.getInventory().setSelectedSlot(resultSet.getInt("selectedSlot"));
             player.networkHandler.sendPacket(new UpdateSelectedSlotS2CPacket(resultSet.getInt("selectedSlot")));
             if (!"".equals(resultSet.getString("main"))) {
-                List.of(resultSet.getString("main").split("&")).forEach(compound -> {
-                    String[] compounds = compound.split("~");
-                    player.getInventory().setStack(Integer.parseInt(compounds[1]), ItemStack.CODEC.parse(wrappedOps, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
+                List.of(resultSet.getString("main").split("(?<=~\\d{1,5})&")).forEach(compound -> {
+                    int lastTilde = compound.lastIndexOf("~");
+                    if (lastTilde == -1) {
+                        LOGGER.error("Malformed main inventory data: {}", compound);
+                        return;
+                    }
+                    String json = compound.substring(0, lastTilde);
+                    int index = Integer.parseInt(compound.substring(lastTilde + 1));
+                    player.getInventory().setStack(index, ItemStack.CODEC.parse(wrappedOps, JsonParser.parseString(json)).resultOrPartial(LOGGER::error).orElseThrow());
                 });
             }
             if (!"".equals(resultSet.getString("armor"))) {
-                List.of(resultSet.getString("armor").split("&")).forEach(compound -> {
-                    String[] compounds = compound.split("~");
-                    int idx = Integer.parseInt(compounds[1]);
+                List.of(resultSet.getString("armor").split("(?<=~\\d{1,5})&")).forEach(compound -> {
+                    int lastTilde = compound.lastIndexOf("~");
+                    if (lastTilde == -1) {
+                        LOGGER.error("Malformed armor data: {}", compound);
+                        return;
+                    }
+                    String json = compound.substring(0, lastTilde);
+                    int idx = Integer.parseInt(compound.substring(lastTilde + 1));
                     net.minecraft.entity.EquipmentSlot slot = switch (idx) {
                         case 0 -> net.minecraft.entity.EquipmentSlot.FEET;
                         case 1 -> net.minecraft.entity.EquipmentSlot.LEGS;
@@ -94,7 +111,7 @@ public class sqlPlayer {
                         default -> null;
                     };
                     if (slot != null) {
-                        player.equipStack(slot, ItemStack.CODEC.parse(wrappedOps, JsonParser.parseString(compounds[0])).resultOrPartial(LOGGER::error).orElseThrow());
+                        player.equipStack(slot, ItemStack.CODEC.parse(wrappedOps, JsonParser.parseString(json)).resultOrPartial(LOGGER::error).orElseThrow());
                     }
                 });
             }
