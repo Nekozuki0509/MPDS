@@ -3,11 +3,9 @@ package mpds.mpds.events;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import mpds.mpds.mixin.PlayerManagerInvoker;
 import mpds.mpds.sql;
-import mpds.mpds.sqlPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -33,7 +31,7 @@ public class Disconnect {
                             minecraftServer.getPlayerManager().broadcast(Text.translatable("skip saving because " + playerN + "'s data includes skip list").formatted(Formatting.YELLOW), false);
                         LOGGER.warn("skip saving because {}'s data includes skip list", playerN);
 
-                        player.getWorld().playSound(null, player.getBlockPos(), BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1f, 1f);
+                        playSound(player, BLOCK_GLASS_BREAK);
                         sql.beA(player.getUuidAsString());
 
                         return;
@@ -51,7 +49,7 @@ public class Disconnect {
                         return;
                     }
 
-                    sql.disconnect(new sqlPlayer(player));
+                    sql.savePlayerData(player, true);
 
                     ((PlayerManagerInvoker) minecraftServer.getPlayerManager()).invokesavePlayerData(player);
                     LOGGER.info("success to save {}'s data", playerN);

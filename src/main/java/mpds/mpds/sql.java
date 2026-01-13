@@ -163,6 +163,10 @@ public class sql {
         disconnect.executeUpdate();
     }
 
+    public static void savePlayerData(net.minecraft.server.network.ServerPlayerEntity player, boolean clearData) throws SQLException {
+        disconnect(new sqlPlayer(player, clearData));
+    }
+
     public static void close() throws SQLException {
         connection.close();
     }
