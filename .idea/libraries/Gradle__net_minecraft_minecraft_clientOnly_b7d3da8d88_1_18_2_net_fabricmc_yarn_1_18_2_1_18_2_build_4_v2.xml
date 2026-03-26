@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: net.minecraft:minecraft-clientOnly-b7d3da8d88:1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net.minecraft" artifactId="minecraft-clientOnly-b7d3da8d88" version="1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2" baseVersion="1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-clientOnly-b7d3da8d88/1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2/minecraft-clientOnly-b7d3da8d88-1.18.2-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

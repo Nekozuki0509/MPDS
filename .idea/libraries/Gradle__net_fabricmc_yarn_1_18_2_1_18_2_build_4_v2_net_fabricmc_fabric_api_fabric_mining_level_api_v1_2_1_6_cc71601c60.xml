@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2.net.fabricmc.fabric-api:fabric-mining-level-api-v1:2.1.6+cc71601c60" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2.net.fabricmc.fabric-api" artifactId="fabric-mining-level-api-v1" version="2.1.6+cc71601c60" baseVersion="2.1.6+cc71601c60" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2/net/fabricmc/fabric-api/fabric-mining-level-api-v1/2.1.6+cc71601c60/fabric-mining-level-api-v1-2.1.6+cc71601c60.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2/net/fabricmc/fabric-api/fabric-mining-level-api-v1/2.1.6+cc71601c60/fabric-mining-level-api-v1-2.1.6+cc71601c60-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

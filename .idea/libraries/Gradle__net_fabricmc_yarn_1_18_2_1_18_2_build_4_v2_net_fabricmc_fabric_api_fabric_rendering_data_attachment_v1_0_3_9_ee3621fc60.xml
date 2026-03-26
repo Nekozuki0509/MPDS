@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2.net.fabricmc.fabric-api:fabric-rendering-data-attachment-v1:0.3.9+ee3621fc60" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2.net.fabricmc.fabric-api" artifactId="fabric-rendering-data-attachment-v1" version="0.3.9+ee3621fc60" baseVersion="0.3.9+ee3621fc60" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2/net/fabricmc/fabric-api/fabric-rendering-data-attachment-v1/0.3.9+ee3621fc60/fabric-rendering-data-attachment-v1-0.3.9+ee3621fc60.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/net_fabricmc_yarn_1_18_2_1_18_2_build_4_v2/net/fabricmc/fabric-api/fabric-rendering-data-attachment-v1/0.3.9+ee3621fc60/fabric-rendering-data-attachment-v1-0.3.9+ee3621fc60-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

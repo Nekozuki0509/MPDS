@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPDS.iml" filepath="$PROJECT_DIR$/.idea/modules/MPDS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/MPDS.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/MPDS.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/MPDS.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/MPDS.common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/MPDS.common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/MPDS.common.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.iml" filepath="$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.client.iml" filepath="$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.main.iml" filepath="$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.test.iml" filepath="$PROJECT_DIR$/.idea/modules/v1.18.2/MPDS.v1.18.2.test.iml" />
+    </modules>
+  </component>
+</project>

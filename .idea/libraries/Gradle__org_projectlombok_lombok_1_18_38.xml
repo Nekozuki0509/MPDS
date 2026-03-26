@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.projectlombok:lombok:1.18.38" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.projectlombok" artifactId="lombok" version="1.18.38" baseVersion="1.18.38" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/41bc8cca306da167a0e8bc62ce4769b34b90180f/lombok-1.18.38-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
