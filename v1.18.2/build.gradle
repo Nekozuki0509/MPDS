@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
+}
+
+def versionProperties = new Properties()
+file("gradle.properties").withInputStream { stream ->
+    versionProperties.load(stream)
+}
+versionProperties.each { key, value ->
+    ext.set(key.toString(), value)
 }
 
 version ="4.0.0"
