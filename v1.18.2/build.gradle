@@ -2,8 +2,7 @@ plugins {
     id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
 }
-
-version ="4.0.0"
+version = project.findProperty("mod_version") ?: "4.0.0"
 var arbase = "mpds-" + project.archive_version
 
 base {
