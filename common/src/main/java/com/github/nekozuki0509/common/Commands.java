@@ -12,7 +12,7 @@ import static com.github.nekozuki0509.common.Common.api;
 
 public class Commands {
 
-    public int updateSkip(ArgumentGetter getter) {
+    public static int updateSkip(ArgumentGetter getter, MinecraftPlayer player) {
         while (true) {
             try {
                 Sql.updateSkip(getter.getString("player"), String.valueOf(getter.getBool("skip")));
@@ -30,7 +30,7 @@ public class Commands {
         }
     }
 
-    public int showSkip(ArgumentGetter getter, MinecraftPlayer player) {
+    public static int showSkip(ArgumentGetter getter, MinecraftPlayer player) {
         ResultSet skiprs;
         StringBuilder skipp = new StringBuilder();
 

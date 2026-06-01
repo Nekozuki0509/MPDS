@@ -1,5 +1,8 @@
 package com.github.nekozuki0509.common;
 
+import com.github.nekozuki0509.common.events.Disconnect;
+import com.github.nekozuki0509.common.events.Join;
+import com.github.nekozuki0509.common.events.ServerStopped;
 import com.github.nekozuki0509.common.minecraft.MinecraftApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +20,8 @@ public class Common {
 
     public static Config config;
 
-    public static void init() {
+    public static void init(MinecraftApi impledApi) {
+        api = impledApi;
         config = Config.init();
 
         try {
@@ -28,7 +32,12 @@ public class Common {
             e.printStackTrace();
         }
 
-        api.registerEvents();
+        api.onJoin(Join::onjoin);
+        api.onDisconnect(Disconnect::ondisconnect);
+        api.onServerStopped(ServerStopped::onServerStopped);
+
+        api.registerCommand("updateSkip", Commands::updateSkip);
+        api.registerCommand("showSkip", Commands::showSkip);
 
         LOGGER.info("MPDS loaded");
     }

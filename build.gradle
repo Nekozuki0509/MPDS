@@ -5,7 +5,42 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.12/samples
  */
 
-ext {
-    mod_version = project.property("mod_version")
-    archives_base_name = project.property("archives_base_name")
+plugins {
+    id 'base'
+    id 'fabric-loom' version '1.10-SNAPSHOT' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    version = rootProject.mod_version
+
+    repositories {
+        mavenCentral()
+        maven { name = 'Fabric'; url = 'https://maven.fabricmc.net/' }
+    }
+
+    dependencies {
+        compileOnly         "org.projectlombok:lombok:1.18.38"
+        annotationProcessor "org.projectlombok:lombok:1.18.38"
+        testCompileOnly         "org.projectlombok:lombok:1.18.38"
+        testAnnotationProcessor "org.projectlombok:lombok:1.18.38"
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release.set(17)
+    }
+
+    test { useJUnitPlatform() }
+}
+
+tasks.named('clean') {
+    delete rootProject.file('dist')
+}
+
+tasks.named('build') {
+    subprojects.findAll { it.parent?.name == 'versions' }.each { sub ->
+        dependsOn("${sub.path}:build")
+    }
 }

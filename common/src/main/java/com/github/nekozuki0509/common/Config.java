@@ -70,7 +70,6 @@ public class Config {
                 throw new RuntimeException(e);
             }
             System.out.println("made MPDS config file.\nPlease set!");
-            System.exit(0);
         }
 
         try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(String.valueOf(configjson)), StandardCharsets.UTF_8))) {

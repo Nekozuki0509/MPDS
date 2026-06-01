@@ -60,4 +60,23 @@ public class MinecraftPlayer {
         this.Armor = resultSet.getString("armor");
         this.Effects = resultSet.getString("effects");
     }
+
+    public MinecraftPlayer(String uuid, String name, int air, float health, float exhaustion, int foodLevel, float saturationLevel, int foodTickTimer, int experienceLevel, float experienceProgress, String enderChestInventory, String off, int selectedSlot, String main, String armor, String effects) {
+        this.Uuid = uuid;
+        this.Name = name;
+        this.Air = air;
+        this.Health = health;
+        this.Exhaustion = exhaustion;
+        this.FoodLevel = foodLevel;
+        this.SaturationLevel = saturationLevel;
+        this.FoodTickTimer = foodTickTimer;
+        this.ExperienceLevel = experienceLevel;
+        this.ExperienceProgress = experienceProgress;
+        this.EnderChestInventory = enderChestInventory;
+        this.Off = off;
+        this.SelectedSlot = selectedSlot;
+        this.Main = main;
+        this.Armor = armor;
+        this.Effects = effects;
+    }
 }

@@ -1,0 +1,1 @@
+apply from: rootProject.file('loom-common.gradle')

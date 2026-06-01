@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "mpds",
+  "version": "${version}",
+
+  "name": "MPDS",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "All-Rights-Reserved",
+
+  "environment": "server",
+  "entrypoints": {
+    "main": ["com.github.nekozuki0509.mpds.Mpds"]
+  },
+
+  "mixins": [
+    "mpds.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

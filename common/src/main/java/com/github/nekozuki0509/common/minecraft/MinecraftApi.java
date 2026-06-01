@@ -1,12 +1,19 @@
 package com.github.nekozuki0509.common.minecraft;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 public interface MinecraftApi {
 
     Path getConfigDir();
 
-    void registerEvents();
+    void registerCommand(String name, CommandFunction consumer);
+
+    void onJoin(Consumer<MinecraftPlayer> handler);
+
+    void onDisconnect(Consumer<MinecraftPlayer> handler);
+
+    void onServerStopped(Runnable handler);
 
     void broadcast(String msg, Colors color);
 
@@ -18,7 +25,7 @@ public interface MinecraftApi {
 
     void sendMessage(MinecraftPlayer player, String string, Colors color);
 
-    void playPlayerSound(MinecraftPlayer player, Sounds sounds);
+    void playPlayerSound(MinecraftPlayer player, Sounds sound);
 
     void clearInventory(MinecraftPlayer player);
 

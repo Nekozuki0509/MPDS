@@ -21,4 +21,6 @@ rootProject.name = 'MPDS'
 
 include 'common'
 
-include 'v1.18.2'
+file('versions').eachDir { dir ->
+    include "versions:${dir.name}"
+}
