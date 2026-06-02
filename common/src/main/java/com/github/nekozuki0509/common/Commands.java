@@ -4,6 +4,7 @@ import com.github.nekozuki0509.common.minecraft.ArgumentGetter;
 import com.github.nekozuki0509.common.minecraft.Colors;
 import com.github.nekozuki0509.common.minecraft.MinecraftPlayer;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.ResultSet;
 
@@ -22,8 +23,7 @@ public class Commands {
             } catch (CommunicationsException ignored) {
             } catch (Exception e) {
                 api.broadcast("THERE WERE SOME ERRORS : \n%s".formatted(e.getMessage()), Colors.RED);
-                LOGGER.error("THERE WERE SOME ERRORS :");
-                e.printStackTrace();
+                LOGGER.error("THERE WERE SOME ERRORS :\n{}", ExceptionUtils.getStackTrace(e));
 
                 return 1;
             }
@@ -53,8 +53,7 @@ public class Commands {
             } catch (CommunicationsException ignored) {
             } catch (Exception e) {
                 api.broadcast("THERE WERE SOME ERRORS : \n%s".formatted(e.getMessage()), Colors.RED);
-                LOGGER.error("THERE WERE SOME ERRORS :");
-                e.printStackTrace();
+                LOGGER.error("THERE WERE SOME ERRORS :\n{}", ExceptionUtils.getStackTrace(e));
 
                 return 1;
             }

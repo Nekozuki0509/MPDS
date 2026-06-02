@@ -1,9 +1,10 @@
 package com.github.nekozuki0509.common.events;
 
+import com.github.nekozuki0509.common.Sql;
 import com.github.nekozuki0509.common.minecraft.Colors;
 import com.github.nekozuki0509.common.minecraft.MinecraftPlayer;
-import com.github.nekozuki0509.common.Sql;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.ResultSet;
 
@@ -36,24 +37,16 @@ public class Disconnect {
                         LOGGER.warn("skip saving because {}'s data was broken", playerN);
                         broken.remove(player.getUuid());
 
-                        api.clearInventory(player);
-                        api.clearEnderChestInventory(player);
-                        api.clearStatusEffects(player);
-                        api.savePlayerData(player);
-
                         return;
                     }
 
                     Sql.disconnect(player);
-
-                    api.savePlayerData(player);
                     LOGGER.info("success to save {}'s data", playerN);
 
                     return;
                 } catch (CommunicationsException ignored) {
                 } catch (Exception e) {
-                    LOGGER.error("FAIL TO SAVE {}'s DATA:", playerN);
-                    e.printStackTrace();
+                    LOGGER.error("FAIL TO SAVE {}'s DATA:\n{}", playerN, ExceptionUtils.getStackTrace(e));
 
                     return;
                 }

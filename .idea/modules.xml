@@ -16,6 +16,18 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.18.2/MPDS.versions.v1.18.2.client.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.18.2/MPDS.versions.v1.18.2.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.18.2/MPDS.versions.v1.18.2.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.18.2/MPDS.versions.v1.18.2.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.18.2/MPDS.versions.v1.18.2.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.18.2/MPDS.versions.v1.18.2.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.client.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.19.4/MPDS.versions.v1.19.4.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.client.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.20.1/MPDS.versions.v1.20.1.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.client.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.main.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.test.iml" filepath="$PROJECT_DIR$/.idea/modules/versions/v1.21/MPDS.versions.v1.21.test.iml" />
     </modules>
   </component>
 </project>

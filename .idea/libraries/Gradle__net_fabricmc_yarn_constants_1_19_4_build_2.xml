@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: net.fabricmc:yarn:constants:1.19.4+build.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net.fabricmc" artifactId="yarn" version="1.19.4+build.2" baseVersion="1.19.4+build.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.fabricmc/yarn/1.19.4+build.2/ab966230e058ccab792730613c7ef0a1a64fa46c/yarn-1.19.4+build.2-constants.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.fabricmc/yarn/1.19.4+build.2/96ed1a9a3fbcfd8ef8cf69e5bcf1e89f16948758/yarn-1.19.4+build.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

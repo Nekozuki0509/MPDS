@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.llamalad7:mixinextras-fabric:0.3.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.github.llamalad7" artifactId="mixinextras-fabric" version="0.3.2" baseVersion="0.3.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-fabric/0.3.2/33c53c7014a170a9cdfbc801f7a77a0eefd3bd00/mixinextras-fabric-0.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.llamalad7/mixinextras-fabric/0.3.2/508bcf587aa4fc68b0d84b2462a2d5d18c3bacdb/mixinextras-fabric-0.3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

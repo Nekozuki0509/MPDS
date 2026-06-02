@@ -2,7 +2,6 @@ package com.github.nekozuki0509.mpds.impl;
 
 import com.github.nekozuki0509.common.minecraft.*;
 import com.github.nekozuki0509.mpds.mixins.HungerManagerAccessor;
-import com.github.nekozuki0509.mpds.mixins.PlayerManagerInvoker;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -36,7 +35,7 @@ import static com.github.nekozuki0509.mpds.Mpds.server;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class MinecraftApiImpl implements MinecraftApi {
-    private static HashMap<String, ServerPlayerEntity> players = new HashMap<>();
+    private static final HashMap<String, ServerPlayerEntity> players = new HashMap<>();
 
     @Override
     public Path getConfigDir() {
@@ -54,12 +53,12 @@ public class MinecraftApiImpl implements MinecraftApi {
 
     @Override
     public void onJoin(Consumer<MinecraftPlayer> handler) {
-        ServerPlayConnectionEvents.JOIN.register((h, sender, s) -> handler.accept(transformPlayer(h.player)));
+        ServerPlayConnectionEvents.INIT.register((h, s) -> handler.accept(transformPlayer(h.player)));
     }
 
     @Override
     public void onDisconnect(Consumer<MinecraftPlayer> handler) {
-        ServerPlayConnectionEvents.DISCONNECT.register((h,  s) -> handler.accept(transformPlayer(h.player)));
+        ServerPlayConnectionEvents.DISCONNECT.register((h, s) -> handler.accept(transformPlayer(h.player)));
     }
 
     @Override
@@ -70,11 +69,6 @@ public class MinecraftApiImpl implements MinecraftApi {
     @Override
     public void broadcast(String msg, Colors color) {
         server.getPlayerManager().broadcast(new TranslatableText(msg).formatted(transformColor(color)), MessageType.SYSTEM, Util.NIL_UUID);
-    }
-
-    @Override
-    public void savePlayerData(MinecraftPlayer player) {
-        ((PlayerManagerInvoker) server.getPlayerManager()).invokesavePlayerData(players.get(player.getUuid()));
     }
 
     @Override
@@ -184,7 +178,6 @@ public class MinecraftApiImpl implements MinecraftApi {
             endResults.append(ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, end.getStack(i)).resultOrPartial(LOGGER::error).orElseThrow()).append("~").append(i).append("&");
         }
         String enderChestInventory = endResults.toString();
-        if (config.isSEn()) player.getEnderChestInventory().clear();
 
         String off = player.getInventory().offHand.get(0).isEmpty() ? "" : ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, player.getInventory().offHand.get(0)).resultOrPartial(LOGGER::error).orElseThrow().toString();
         int selectedSlot = player.getInventory().selectedSlot;
@@ -205,12 +198,9 @@ public class MinecraftApiImpl implements MinecraftApi {
         }
         String armor = armorResults.toString();
 
-        if (config.isSI()) player.getInventory().clear();
-
         StringBuilder effectResults = new StringBuilder();
         player.getStatusEffects().forEach(effect -> effectResults.append(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, effect.writeNbt(new NbtCompound())).resultOrPartial(LOGGER::error).orElseThrow()).append("&"));
         String effects = effectResults.toString();
-        if (config.isSEf()) player.clearStatusEffects();
 
         players.put(uuid, player);
 

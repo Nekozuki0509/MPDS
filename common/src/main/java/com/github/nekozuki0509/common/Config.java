@@ -1,7 +1,6 @@
 package com.github.nekozuki0509.common;
 
 import com.google.gson.Gson;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,6 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Objects;
 
 import static com.github.nekozuki0509.common.Common.api;

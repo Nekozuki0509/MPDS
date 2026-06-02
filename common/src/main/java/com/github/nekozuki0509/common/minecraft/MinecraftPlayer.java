@@ -1,6 +1,9 @@
 package com.github.nekozuki0509.common.minecraft;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

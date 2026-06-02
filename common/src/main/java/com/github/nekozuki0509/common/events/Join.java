@@ -5,6 +5,7 @@ import com.github.nekozuki0509.common.minecraft.Colors;
 import com.github.nekozuki0509.common.minecraft.MinecraftPlayer;
 import com.github.nekozuki0509.common.minecraft.Sounds;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.ResultSet;
 
@@ -13,6 +14,11 @@ import static com.github.nekozuki0509.common.Common.*;
 public class Join {
 
     public static void onjoin(MinecraftPlayer player) {
+        api.clearInventory(player);
+        api.clearEnderChestInventory(player);
+        api.clearStatusEffects(player);
+        prevent.add(player.getUuid());
+
         new Thread(() -> {
             String playerN = player.getName();
             broken.add(player.getUuid());
@@ -33,6 +39,7 @@ public class Join {
                         LOGGER.warn("skip loading because {}'s data includes skip list", playerN);
 
                         broken.remove(player.getUuid());
+                        prevent.remove(player.getUuid());
 
                         api.playPlayerSound(player, Sounds.BLOCK_GLASS_BREAK);
                         api.playWorldSound(player, Sounds.BLOCK_GLASS_BREAK);
@@ -45,12 +52,15 @@ public class Join {
                         for (int i = 0; "false".equals(resultSet.getString("sync")); i++) {
                             if (i == 3) {
                                 if (config.getServerName().equals(resultSet.getString("server")) || "*".equals(resultSet.getString("server"))) {
+                                    api.sqlToPlayer(player);
+
                                     if (config.isAJM())
                                         api.sendMessage(player, "saved %s's correct data".formatted(playerN), Colors.AQUA);
                                     LOGGER.info("saved {}'s correct data", playerN);
 
                                     broken.remove(player.getUuid());
                                     api.playPlayerSound(player, Sounds.ENTITY_PLAYER_LEVELUP);
+                                    prevent.remove(player.getUuid());
 
                                     return;
                                 }
@@ -75,7 +85,7 @@ public class Join {
                         api.playPlayerSound(player, Sounds.ENTITY_PLAYER_LEVELUP);
                         Sql.setServer(player.getUuid());
                         broken.remove(player.getUuid());
-
+                        prevent.remove(player.getUuid());
                     } else {
                         Thread.sleep(1000);
 
@@ -88,6 +98,7 @@ public class Join {
                                 api.playPlayerSound(player, Sounds.BLOCK_GLASS_BREAK);
                                 broken.remove(player.getUuid());
                                 Sql.setServer(player.getUuid());
+                                prevent.remove(player.getUuid());
 
                                 return;
                             }
@@ -98,16 +109,11 @@ public class Join {
                     return;
                 } catch (CommunicationsException ignored) {
                 } catch (Exception e) {
-                    api.clearInventory(player);
-                    api.clearEnderChestInventory(player);
-                    api.clearStatusEffects(player);
-
                     if (config.isAEM())
                         api.sendMessage(player, "THERE WERE SOME ERRORS WHEN LOAD PLAYER DATA : \n%s".formatted(e.getMessage()), Colors.RED);
-                    LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD {}'s DATA!:", playerN);
 
+                    LOGGER.error("THERE WERE SOME ERRORS WHEN LOAD {}'s DATA!:\n{}", playerN, ExceptionUtils.getStackTrace(e));
                     api.playPlayerSound(player, Sounds.BLOCK_ANVIL_DESTROY);
-                    e.printStackTrace();
 
                     return;
                 }

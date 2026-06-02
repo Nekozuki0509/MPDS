@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: net_fabricmc_yarn_1_19_4_1_19_4_build_2_v2.net.fabricmc.fabric-api:fabric-game-rule-api-v1-client:1.0.36+3f657af2f4" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net_fabricmc_yarn_1_19_4_1_19_4_build_2_v2.net.fabricmc.fabric-api" artifactId="fabric-game-rule-api-v1-client" version="1.0.36+3f657af2f4" baseVersion="1.0.36+3f657af2f4" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/net_fabricmc_yarn_1_19_4_1_19_4_build_2_v2/net/fabricmc/fabric-api/fabric-game-rule-api-v1-client/1.0.36+3f657af2f4/fabric-game-rule-api-v1-client-1.0.36+3f657af2f4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/net_fabricmc_yarn_1_19_4_1_19_4_build_2_v2/net/fabricmc/fabric-api/fabric-game-rule-api-v1-client/1.0.36+3f657af2f4/fabric-game-rule-api-v1-client-1.0.36+3f657af2f4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

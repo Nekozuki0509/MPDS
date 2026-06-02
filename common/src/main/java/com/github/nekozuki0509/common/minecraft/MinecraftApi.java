@@ -17,8 +17,6 @@ public interface MinecraftApi {
 
     void broadcast(String msg, Colors color);
 
-    void savePlayerData(MinecraftPlayer player);
-
     void playWorldSound(MinecraftPlayer player, Sounds sound);
 
     void sqlToPlayer(MinecraftPlayer player);

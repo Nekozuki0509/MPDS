@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.lwjgl:lwjgl-openal:natives-windows-arm64:3.3.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.lwjgl" artifactId="lwjgl-openal" version="3.3.2" baseVersion="3.3.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.2/545ddec7959007a78b6662d616e00dacf00e1c29/lwjgl-openal-3.3.2-natives-windows-arm64.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.2/534195bc70b8ff83c270c1d618cdafe76e9be2c4/lwjgl-openal-3.3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

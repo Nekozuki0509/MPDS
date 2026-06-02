@@ -8,7 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Common {
 
@@ -17,6 +18,8 @@ public class Common {
     public static MinecraftApi api;
 
     public static final List<String> broken = new ArrayList<>();
+
+    public static final List<String> prevent = new ArrayList<>();
 
     public static Config config;
 

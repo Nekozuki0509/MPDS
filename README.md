@@ -3,17 +3,26 @@
 [![Static Badge](https://img.shields.io/badge/litlink-Nekozuki0509-9594f9)](https://lit.link/nekozuki0509)
 
 # Minecraft Player Data Sync(MPDS)
+
 ## Description
-it's a fabric mod to sync player data between fabric servers. this needs only server side. this mod can sync player's air, health, enderChest, exhaustion, foodLevel, saturationLevel, foodTickTimer, inventory, offhand, armor, selectedSlot, experienceLevel, and experienceProgress. 
+
+it's a fabric mod to sync player data between fabric servers. this needs only server side. this mod can sync player's
+air, health, enderChest, exhaustion, foodLevel, saturationLevel, foodTickTimer, inventory, offhand, armor, selectedSlot,
+experienceLevel, and experienceProgress.
+
 ## TODO
+
 > [!CAUTION]
 > - **you need to build mysql server with 8.0.36 or higher.**
 > - **you need to link fabric servers with proxy server!(like velocity, bungeecord, etc...)**
+
 1. add this mod to server mods folder.
 1. restart server.
 1. edit config file which is in config/mpdsconfig file.
 1. let's play!
+
 ## config file
+
 ```
 {
   "_Hcomment_" : "it's mysql host ip",
@@ -52,6 +61,7 @@ it's a fabric mod to sync player data between fabric servers. this needs only se
 ```
 
 ## sources
+
 Sources are in `master` as a multi-project Gradle build (`common` + version-specific projects like `v1.18.2`).
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U213BUNP)

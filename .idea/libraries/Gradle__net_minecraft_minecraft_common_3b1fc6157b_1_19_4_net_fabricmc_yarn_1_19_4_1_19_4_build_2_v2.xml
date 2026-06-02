@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: net.minecraft:minecraft-common-3b1fc6157b:1.19.4-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="net.minecraft" artifactId="minecraft-common-3b1fc6157b" version="1.19.4-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2" baseVersion="1.19.4-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2" />
+    <ANNOTATIONS>
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Minecraft Development/lib/resources/externalAnnotations.jar!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/.gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-common-3b1fc6157b/1.19.4-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2/minecraft-common-3b1fc6157b-1.19.4-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
