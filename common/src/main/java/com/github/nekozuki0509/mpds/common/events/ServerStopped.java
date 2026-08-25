@@ -1,6 +1,6 @@
-package com.github.nekozuki0509.common.events;
+package com.github.nekozuki0509.mpds.common.events;
 
-import com.github.nekozuki0509.common.Sql;
+import com.github.nekozuki0509.mpds.common.Sql;
 
 import java.sql.SQLException;
 

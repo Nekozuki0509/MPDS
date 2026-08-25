@@ -1,6 +1,6 @@
 package com.github.nekozuki0509.mpds.impl;
 
-import com.github.nekozuki0509.common.minecraft.ArgumentGetter;
+import com.github.nekozuki0509.mpds.common.minecraft.ArgumentGetter;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;

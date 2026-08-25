@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static com.github.nekozuki0509.common.Common.prevent;
+import static com.github.nekozuki0509.mpds.common.Common.prevent;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {

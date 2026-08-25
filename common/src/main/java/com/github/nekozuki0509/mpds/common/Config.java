@@ -1,4 +1,4 @@
-package com.github.nekozuki0509.common;
+package com.github.nekozuki0509.mpds.common;
 
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.github.nekozuki0509.common.Common.api;
+import static com.github.nekozuki0509.mpds.common.Common.api;
 
 @Getter
 @NoArgsConstructor

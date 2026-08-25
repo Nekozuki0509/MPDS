@@ -4,7 +4,9 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.fabricmc/yarn/1.19.4+build.2/ab966230e058ccab792730613c7ef0a1a64fa46c/yarn-1.19.4+build.2-constants.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.fabricmc/yarn/1.19.4+build.2/174e677dac7d024ab1e79d678f7c8a661f10063b/yarn-1.19.4+build.2-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.fabricmc/yarn/1.19.4+build.2/96ed1a9a3fbcfd8ef8cf69e5bcf1e89f16948758/yarn-1.19.4+build.2-sources.jar!/" />
     </SOURCES>

@@ -1,15 +1,15 @@
-package com.github.nekozuki0509.common.events;
+package com.github.nekozuki0509.mpds.common.events;
 
-import com.github.nekozuki0509.common.Sql;
-import com.github.nekozuki0509.common.minecraft.Colors;
-import com.github.nekozuki0509.common.minecraft.MinecraftPlayer;
+import com.github.nekozuki0509.mpds.common.Sql;
+import com.github.nekozuki0509.mpds.common.minecraft.Colors;
+import com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.ResultSet;
 
-import static com.github.nekozuki0509.common.Common.*;
-import static com.github.nekozuki0509.common.minecraft.Sounds.BLOCK_GLASS_BREAK;
+import static com.github.nekozuki0509.mpds.common.Common.*;
+import static com.github.nekozuki0509.mpds.common.minecraft.Sounds.BLOCK_GLASS_BREAK;
 
 public class Disconnect {
 

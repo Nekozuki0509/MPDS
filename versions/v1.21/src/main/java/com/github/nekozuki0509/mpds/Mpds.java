@@ -1,6 +1,6 @@
 package com.github.nekozuki0509.mpds;
 
-import com.github.nekozuki0509.common.Common;
+import com.github.nekozuki0509.mpds.common.Common;
 import com.github.nekozuki0509.mpds.impl.MinecraftApiImpl;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;

@@ -24,7 +24,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.18.2.client" />
+        <module name="MPDS.versions.v1_18_2.client" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -36,7 +36,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.18.2.main" />
+        <module name="MPDS.versions.v1_18_2.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -48,7 +48,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.18.2.test" />
+        <module name="MPDS.versions.v1_18_2.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -60,7 +60,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.19.4.client" />
+        <module name="MPDS.versions.v1_19_4.client" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -72,7 +72,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.19.4.main" />
+        <module name="MPDS.versions.v1_19_4.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -84,7 +84,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.19.4.test" />
+        <module name="MPDS.versions.v1_19_4.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -96,7 +96,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.20.1.client" />
+        <module name="MPDS.versions.v1_20_1.client" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -108,7 +108,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.20.1.main" />
+        <module name="MPDS.versions.v1_20_1.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -120,7 +120,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.20.1.test" />
+        <module name="MPDS.versions.v1_20_1.test" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -132,7 +132,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.21.client" />
+        <module name="MPDS.versions.v1_21.client" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -144,7 +144,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.21.main" />
+        <module name="MPDS.versions.v1_21.main" />
       </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -156,7 +156,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="MPDS.versions.v1.21.test" />
+        <module name="MPDS.versions.v1_21.test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="21">
@@ -187,6 +187,18 @@
       <module name="MPDS.versions.v1.21.client" target="17" />
       <module name="MPDS.versions.v1.21.main" target="17" />
       <module name="MPDS.versions.v1.21.test" target="17" />
+      <module name="MPDS.versions.v1_18_2.client" target="17" />
+      <module name="MPDS.versions.v1_18_2.main" target="17" />
+      <module name="MPDS.versions.v1_18_2.test" target="17" />
+      <module name="MPDS.versions.v1_19_4.client" target="17" />
+      <module name="MPDS.versions.v1_19_4.main" target="17" />
+      <module name="MPDS.versions.v1_19_4.test" target="17" />
+      <module name="MPDS.versions.v1_20_1.client" target="17" />
+      <module name="MPDS.versions.v1_20_1.main" target="17" />
+      <module name="MPDS.versions.v1_20_1.test" target="17" />
+      <module name="MPDS.versions.v1_21.client" target="17" />
+      <module name="MPDS.versions.v1_21.main" target="17" />
+      <module name="MPDS.versions.v1_21.test" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -212,6 +224,22 @@
       <module name="MPDS.versions.v1.21.client" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\client\client-mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
       <module name="MPDS.versions.v1.21.main" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\main\mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
       <module name="MPDS.versions.v1.21.test" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\test\test-mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_18_2" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\classes\java\client\client-mpds-1.18.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\loom-cache\mixin-map-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.18.2\net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_18_2.client" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\classes\java\client\client-mpds-1.18.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\loom-cache\mixin-map-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.18.2\net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_18_2.main" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\classes\java\main\mpds-1.18.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\loom-cache\mixin-map-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.18.2\net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_18_2.test" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\classes\java\test\test-mpds-1.18.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.18.2\build\loom-cache\mixin-map-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.18.2\net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_19_4" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\classes\java\client\client-mpds-1.19.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\loom-cache\mixin-map-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.19.4\net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_19_4.client" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\classes\java\client\client-mpds-1.19.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\loom-cache\mixin-map-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.19.4\net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_19_4.main" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\classes\java\main\mpds-1.19.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\loom-cache\mixin-map-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.19.4\net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_19_4.test" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\classes\java\test\test-mpds-1.19.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.19.4\build\loom-cache\mixin-map-net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.19.4\net.fabricmc.yarn.1_19_4.1.19.4+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_20_1" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\classes\java\client\client-mpds-1.20.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.20.1\net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_20_1.client" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\classes\java\client\client-mpds-1.20.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.20.1\net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_20_1.main" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\classes\java\main\mpds-1.20.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.20.1\net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_20_1.test" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\classes\java\test\test-mpds-1.20.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.20.1\build\loom-cache\mixin-map-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.20.1\net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_21" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\client\client-mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_21.client" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\client\client-mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.client.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_21.main" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\main\mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
+      <module name="MPDS.versions.v1_21.test" options="-AoutRefMapFile=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\classes\java\test\test-mpds-1.21.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=D:\Documents\programs\IntelliJProjects\MPDS\versions\v1.21\build\loom-cache\mixin-map-net.fabricmc.yarn.1_21.1.21+build.2-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.21\net.fabricmc.yarn.1_21.1.21+build.2-v2\mappings.tiny" />
       <module name="mpds.mpds.MPDS.main" options="-AoutRefMapFile=C:\Users\ricch.NEKOZUKINYAN\IntelliJProjects\MPDS\build\classes\java\main\mpds-1.18.x-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\IntelliJProjects\MPDS\build\loom-cache\mixin-map-net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\ricch.NEKOZUKINYAN\.gradle\caches\fabric-loom\1.18.2\net.fabricmc.yarn.1_18_2.1.18.2+build.4-v2\mappings.tiny" />
     </option>
   </component>

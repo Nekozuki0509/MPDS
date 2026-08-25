@@ -1,15 +1,15 @@
-package com.github.nekozuki0509.common;
+package com.github.nekozuki0509.mpds.common;
 
-import com.github.nekozuki0509.common.minecraft.ArgumentGetter;
-import com.github.nekozuki0509.common.minecraft.Colors;
-import com.github.nekozuki0509.common.minecraft.MinecraftPlayer;
+import com.github.nekozuki0509.mpds.common.minecraft.ArgumentGetter;
+import com.github.nekozuki0509.mpds.common.minecraft.Colors;
+import com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer;
 import com.mysql.cj.jdbc.exceptions.CommunicationsException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.sql.ResultSet;
 
-import static com.github.nekozuki0509.common.Common.LOGGER;
-import static com.github.nekozuki0509.common.Common.api;
+import static com.github.nekozuki0509.mpds.common.Common.LOGGER;
+import static com.github.nekozuki0509.mpds.common.Common.api;
 
 public class Commands {
 

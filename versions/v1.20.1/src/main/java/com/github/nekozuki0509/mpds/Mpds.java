@@ -1,6 +1,6 @@
 package com.github.nekozuki0509.mpds;
 
-import com.github.nekozuki0509.common.Common;
+import com.github.nekozuki0509.mpds.common.Common;
 import com.github.nekozuki0509.mpds.impl.MinecraftApiImpl;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;

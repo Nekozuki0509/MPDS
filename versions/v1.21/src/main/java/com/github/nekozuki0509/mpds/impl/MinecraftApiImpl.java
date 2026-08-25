@@ -1,6 +1,6 @@
 package com.github.nekozuki0509.mpds.impl;
 
-import com.github.nekozuki0509.common.minecraft.*;
+import com.github.nekozuki0509.mpds.common.minecraft.Colors;
 import com.github.nekozuki0509.mpds.mixins.HungerManagerAccessor;
 import com.google.gson.JsonParser;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -28,13 +28,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.github.nekozuki0509.common.Common.LOGGER;
-import static com.github.nekozuki0509.common.Common.config;
+import static com.github.nekozuki0509.mpds.common.Common.LOGGER;
+import static com.github.nekozuki0509.mpds.common.Common.config;
 import static com.github.nekozuki0509.mpds.Mpds.server;
 import static com.github.nekozuki0509.mpds.Mpds.wrappedOps;
 import static net.minecraft.server.command.CommandManager.literal;
 
-public class MinecraftApiImpl implements MinecraftApi {
+public class MinecraftApiImpl implements com.github.nekozuki0509.mpds.common.minecraft.MinecraftApi {
     private static final HashMap<String, ServerPlayerEntity> players = new HashMap<>();
 
     @Override
@@ -43,7 +43,7 @@ public class MinecraftApiImpl implements MinecraftApi {
     }
 
     @Override
-    public void registerCommand(String name, CommandFunction consumer) {
+    public void registerCommand(String name, com.github.nekozuki0509.mpds.common.minecraft.CommandFunction consumer) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(literal(name)
                         .executes(ctx -> consumer.execute(new ArgumentGetterImpl(ctx), transformPlayer(ctx.getSource().getPlayer())))
@@ -52,12 +52,12 @@ public class MinecraftApiImpl implements MinecraftApi {
     }
 
     @Override
-    public void onJoin(Consumer<MinecraftPlayer> handler) {
+    public void onJoin(Consumer<com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer> handler) {
         ServerPlayConnectionEvents.INIT.register((h, s) -> handler.accept(transformPlayer(h.player)));
     }
 
     @Override
-    public void onDisconnect(Consumer<MinecraftPlayer> handler) {
+    public void onDisconnect(Consumer<com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer> handler) {
         ServerPlayConnectionEvents.DISCONNECT.register((h, s) -> handler.accept(transformPlayer(h.player)));
     }
 
@@ -67,18 +67,18 @@ public class MinecraftApiImpl implements MinecraftApi {
     }
 
     @Override
-    public void broadcast(String msg, Colors color) {
+    public void broadcast(String msg, com.github.nekozuki0509.mpds.common.minecraft.Colors color) {
         server.getPlayerManager().broadcast(Text.translatable(msg).formatted(transformColor(color)), false);
     }
 
     @Override
-    public void playWorldSound(MinecraftPlayer player, Sounds sound) {
+    public void playWorldSound(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player, com.github.nekozuki0509.mpds.common.minecraft.Sounds sound) {
         ServerPlayerEntity playerEntity = players.get(player.getUuid());
         playerEntity.getWorld().playSound(null, playerEntity.getBlockPos(), transformSound(sound), SoundCategory.PLAYERS, 1f, 1f);
     }
 
     @Override
-    public void sqlToPlayer(MinecraftPlayer player) {
+    public void sqlToPlayer(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player) {
         ServerPlayerEntity playerEntity = players.get(player.getUuid());
 
         if (config.isSA()) playerEntity.setAir(player.getAir());
@@ -132,32 +132,32 @@ public class MinecraftApiImpl implements MinecraftApi {
     }
 
     @Override
-    public void sendMessage(MinecraftPlayer player, String string, Colors color) {
+    public void sendMessage(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player, String string, com.github.nekozuki0509.mpds.common.minecraft.Colors color) {
         players.get(player.getUuid()).sendMessage(Text.translatable(string).formatted(transformColor(color)));
     }
 
     @Override
-    public void playPlayerSound(MinecraftPlayer player, Sounds sound) {
+    public void playPlayerSound(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player, com.github.nekozuki0509.mpds.common.minecraft.Sounds sound) {
         ServerPlayerEntity playerEntity = players.get(player.getUuid());
         playerEntity.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(transformSound(sound)), SoundCategory.PLAYERS, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(), 1f, 1f, Random.createThreadSafe().nextLong()));
     }
 
     @Override
-    public void clearInventory(MinecraftPlayer player) {
+    public void clearInventory(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player) {
         players.get(player.getUuid()).getInventory().clear();
     }
 
     @Override
-    public void clearEnderChestInventory(MinecraftPlayer player) {
+    public void clearEnderChestInventory(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player) {
         players.get(player.getUuid()).getEnderChestInventory().clear();
     }
 
     @Override
-    public void clearStatusEffects(MinecraftPlayer player) {
+    public void clearStatusEffects(com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer player) {
         players.get(player.getUuid()).clearStatusEffects();
     }
 
-    private MinecraftPlayer transformPlayer(ServerPlayerEntity player) {
+    private com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer transformPlayer(ServerPlayerEntity player) {
         if (player == null) return null;
 
         String uuid = player.getUuidAsString();
@@ -204,7 +204,7 @@ public class MinecraftApiImpl implements MinecraftApi {
 
         players.put(uuid, player);
 
-        return new MinecraftPlayer(uuid, name, air, health, exhaustion, foodLevel, saturationLevel, foodTickTimer, experienceLevel, experienceProgress, enderChestInventory, off, selectedSlot, main, armor, effects);
+        return new com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer(uuid, name, air, health, exhaustion, foodLevel, saturationLevel, foodTickTimer, experienceLevel, experienceProgress, enderChestInventory, off, selectedSlot, main, armor, effects);
     }
 
     private Formatting transformColor(Colors color) {
@@ -216,7 +216,7 @@ public class MinecraftApiImpl implements MinecraftApi {
         };
     }
 
-    private SoundEvent transformSound(Sounds sound) {
+    private SoundEvent transformSound(com.github.nekozuki0509.mpds.common.minecraft.Sounds sound) {
         return switch (sound) {
             case BLOCK_GLASS_BREAK -> SoundEvents.BLOCK_GLASS_BREAK;
             case ENTITY_PLAYER_LEVELUP -> SoundEvents.ENTITY_PLAYER_LEVELUP;

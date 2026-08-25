@@ -1,9 +1,9 @@
-package com.github.nekozuki0509.common;
+package com.github.nekozuki0509.mpds.common;
 
-import com.github.nekozuki0509.common.events.Disconnect;
-import com.github.nekozuki0509.common.events.Join;
-import com.github.nekozuki0509.common.events.ServerStopped;
-import com.github.nekozuki0509.common.minecraft.MinecraftApi;
+import com.github.nekozuki0509.mpds.common.events.Disconnect;
+import com.github.nekozuki0509.mpds.common.events.Join;
+import com.github.nekozuki0509.mpds.common.events.ServerStopped;
+import com.github.nekozuki0509.mpds.common.minecraft.MinecraftApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

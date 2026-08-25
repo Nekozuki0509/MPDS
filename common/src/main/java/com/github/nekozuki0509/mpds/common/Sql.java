@@ -1,10 +1,10 @@
-package com.github.nekozuki0509.common;
+package com.github.nekozuki0509.mpds.common;
 
-import com.github.nekozuki0509.common.minecraft.MinecraftPlayer;
+import com.github.nekozuki0509.mpds.common.minecraft.MinecraftPlayer;
 
 import java.sql.*;
 
-import static com.github.nekozuki0509.common.Common.config;
+import static com.github.nekozuki0509.mpds.common.Common.config;
 
 public class Sql {
 
