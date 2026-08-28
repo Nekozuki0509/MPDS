@@ -50,7 +50,7 @@ public class Config {
 
     public static Config init() {
         Path configDir = api.getConfigDir().resolve("MPDS");
-        Path configjson = configDir.resolve("mpdsConfig.json");
+        Path configjson = configDir.resolve("Config.json");
 
         if (Files.notExists(configDir)) {
             try {
@@ -63,7 +63,7 @@ public class Config {
 
         if (Files.notExists(configjson)) {
             try {
-                Files.copy(Objects.requireNonNull(Common.class.getResourceAsStream("/mpdsConfig.json")), configjson);
+                Files.copy(Objects.requireNonNull(Common.class.getResourceAsStream("/Config.json")), configjson);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
